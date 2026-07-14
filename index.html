@@ -48,7 +48,6 @@
       href="/images/icon-192.png"
     />
 
-    <!-- Leaflet Map CSS -->
     <link
       rel="stylesheet"
       href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -64,11 +63,9 @@
 
   <body>
     <main class="app">
-
       <!-- ================= TOP ACTIONS ================= -->
 
       <div class="top-actions">
-
         <button
           id="themeBtn"
           class="secondary-btn theme-btn"
@@ -79,30 +76,29 @@
         </button>
 
         <button
-  id="shareWeatherBtn"
-  class="secondary-btn share-weather-button"
-  type="button"
-  aria-label="Share current weather"
-  hidden
->
-  🔗 Share
-</button>
+          id="shareWeatherBtn"
+          class="secondary-btn share-weather-button"
+          type="button"
+          aria-label="Share current weather"
+          hidden
+        >
+          🔗 Share
+        </button>
 
         <button
           id="installAppBtn"
           class="install-app-button"
           type="button"
+          aria-label="Install WeatherScope app"
           hidden
         >
           Install App
         </button>
-
       </div>
 
       <!-- ================= HEADER ================= -->
 
       <header class="app-header">
-
         <p class="eyebrow">
           WEATHER DASHBOARD
         </p>
@@ -115,7 +111,6 @@
           Real-time weather, hourly forecasts, air quality,
           UV information, maps, and saved cities.
         </p>
-
       </header>
 
       <!-- ================= SEARCH ================= -->
@@ -124,7 +119,6 @@
         class="search-section"
         aria-labelledby="searchHeading"
       >
-
         <h2
           id="searchHeading"
           class="sr-only"
@@ -137,25 +131,24 @@
           class="search-form"
           novalidate
         >
-
           <label for="cityInput">
             City
           </label>
 
           <div class="search-box">
-
             <div class="autocomplete-wrapper">
-
               <input
                 type="search"
                 id="cityInput"
                 name="city"
+                role="combobox"
                 placeholder="Search city..."
                 autocomplete="off"
                 maxlength="80"
                 aria-autocomplete="list"
                 aria-controls="citySuggestions"
                 aria-expanded="false"
+                aria-haspopup="listbox"
                 required
               />
 
@@ -166,14 +159,13 @@
                 aria-label="City suggestions"
                 hidden
               ></div>
-
             </div>
 
             <button
               id="searchBtn"
               type="submit"
+              aria-label="Search weather by city"
             >
-
               <span class="button-text">
                 Search
               </span>
@@ -182,33 +174,32 @@
                 class="button-spinner"
                 aria-hidden="true"
               ></span>
-
             </button>
-
           </div>
 
           <!-- ================= TOOLBAR ================= -->
 
           <div class="toolbar">
-
             <button
               id="locationBtn"
               type="button"
               class="secondary-btn"
+              aria-label="Use current location"
             >
               📍 Use My Location
             </button>
 
             <div
               class="unit-toggle"
+              role="group"
               aria-label="Temperature unit"
             >
-
               <button
                 id="metricBtn"
                 type="button"
                 class="unit-btn active"
                 aria-label="Use Celsius"
+                aria-pressed="true"
               >
                 °C
               </button>
@@ -218,16 +209,13 @@
                 type="button"
                 class="unit-btn"
                 aria-label="Use Fahrenheit"
+                aria-pressed="false"
               >
                 °F
               </button>
-
             </div>
-
           </div>
-
         </form>
-
       </section>
 
       <!-- ================= STATUS ================= -->
@@ -244,16 +232,13 @@
 
       <section
         class="result-section"
-        aria-label="Current Weather"
+        aria-label="Current weather"
       >
-
         <div
           id="weatherResult"
           class="weather-result"
         >
-
           <div class="empty-state">
-
             <span
               class="empty-state-icon"
               aria-hidden="true"
@@ -268,33 +253,35 @@
             <p>
               Current weather will appear here.
             </p>
-
           </div>
-
         </div>
-
       </section>
 
       <!-- ================= TODAY'S HIGHLIGHTS ================= -->
 
-<section
-  id="highlightsSection"
-  class="highlights-section"
-  aria-labelledby="highlightsHeading"
-  hidden
->
-  <div class="section-heading">
-    <div>
-      <p class="section-kicker">TODAY</p>
-      <h2 id="highlightsHeading">Today’s Highlights</h2>
-    </div>
-  </div>
+      <section
+        id="highlightsSection"
+        class="highlights-section"
+        aria-labelledby="highlightsHeading"
+        hidden
+      >
+        <div class="section-heading">
+          <div>
+            <p class="section-kicker">
+              TODAY
+            </p>
 
-  <div
-    id="highlightsGrid"
-    class="highlights-grid"
-  ></div>
-</section>
+            <h2 id="highlightsHeading">
+              Today’s Highlights
+            </h2>
+          </div>
+        </div>
+
+        <div
+          id="highlightsGrid"
+          class="highlights-grid"
+        ></div>
+      </section>
 
       <!-- ================= WEATHER MAP ================= -->
 
@@ -304,11 +291,8 @@
         aria-labelledby="mapHeading"
         hidden
       >
-
         <div class="section-heading">
-
           <div>
-
             <p class="section-kicker">
               LOCATION
             </p>
@@ -316,9 +300,7 @@
             <h2 id="mapHeading">
               Weather Map
             </h2>
-
           </div>
-
         </div>
 
         <div
@@ -328,7 +310,6 @@
           aria-label="Map showing the selected weather location"
           tabindex="0"
         ></div>
-
       </section>
 
       <!-- ================= HOURLY ================= -->
@@ -339,11 +320,8 @@
         aria-labelledby="hourlyHeading"
         hidden
       >
-
         <div class="section-heading">
-
           <div>
-
             <p class="section-kicker">
               TODAY
             </p>
@@ -351,16 +329,13 @@
             <h2 id="hourlyHeading">
               Hourly Forecast
             </h2>
-
           </div>
-
         </div>
 
         <div
           id="hourlyList"
           class="hourly-list"
         ></div>
-
       </section>
 
       <!-- ================= 5 DAYS ================= -->
@@ -371,11 +346,8 @@
         aria-labelledby="forecastHeading"
         hidden
       >
-
         <div class="section-heading">
-
           <div>
-
             <p class="section-kicker">
               NEXT DAYS
             </p>
@@ -383,16 +355,13 @@
             <h2 id="forecastHeading">
               5-Day Forecast
             </h2>
-
           </div>
-
         </div>
 
         <div
           id="forecastList"
           class="forecast-list"
         ></div>
-
       </section>
 
       <!-- ================= FAVOURITES ================= -->
@@ -401,13 +370,10 @@
         class="recent-section"
         aria-labelledby="favoriteHeading"
       >
-
         <div class="section-heading">
-
           <h2 id="favoriteHeading">
             Favourite Cities
           </h2>
-
         </div>
 
         <p
@@ -421,7 +387,6 @@
           id="favoriteList"
           class="recent-list"
         ></ul>
-
       </section>
 
       <!-- ================= RECENT ================= -->
@@ -430,9 +395,7 @@
         class="recent-section"
         aria-labelledby="recentHeading"
       >
-
         <div class="section-heading">
-
           <h2 id="recentHeading">
             Recent Cities
           </h2>
@@ -441,11 +404,11 @@
             id="clearRecentBtn"
             class="text-button"
             type="button"
+            aria-label="Clear all recent city searches"
             hidden
           >
             Clear All
           </button>
-
         </div>
 
         <p
@@ -459,21 +422,18 @@
           id="recentList"
           class="recent-list"
         ></ul>
-
       </section>
 
       <!-- ================= FOOTER ================= -->
 
       <footer>
-
         <small>
-
           Powered by
 
           <a
             href="https://openweathermap.org/"
             target="_blank"
-            rel="noreferrer"
+            rel="noopener noreferrer"
           >
             OpenWeather API
           </a>
@@ -483,18 +443,14 @@
           <a
             href="https://www.openstreetmap.org/"
             target="_blank"
-            rel="noreferrer"
+            rel="noopener noreferrer"
           >
             OpenStreetMap
           </a>
-
         </small>
-
       </footer>
-
     </main>
 
-    <!-- Leaflet Map JavaScript -->
     <script
       src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
       integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
@@ -505,6 +461,5 @@
       type="module"
       src="js/main.js"
     ></script>
-
   </body>
 </html>
