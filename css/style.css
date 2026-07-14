@@ -1669,3 +1669,22 @@ html[data-theme="dark"] .highlight-card {
     transform: none;
   }
 }
+
+/* ================= SHARE WEATHER ================= */
+
+.share-weather-button {
+  min-height: 42px;
+  padding: 0 16px;
+  white-space: nowrap;
+}
+
+.share-weather-button[hidden] {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  .share-weather-button {
+    width: 100%;
+    min-height: 48px;
+  }
+}

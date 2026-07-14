@@ -61,7 +61,8 @@ const elements = {
   cityInput: document.getElementById("cityInput"),
   citySuggestions:
     document.getElementById("citySuggestions"),
-  searchButton: document.getElementById("searchBtn"),
+  searchButton:
+    document.getElementById("searchBtn"),
 
   locationButton:
     document.getElementById("locationBtn"),
@@ -72,10 +73,13 @@ const elements = {
 
   themeButton:
     document.getElementById("themeBtn"),
+  shareWeatherButton:
+    document.getElementById("shareWeatherBtn"),
   installAppButton:
     document.getElementById("installAppBtn"),
 
-  status: document.getElementById("status"),
+  status:
+    document.getElementById("status"),
   weatherResult:
     document.getElementById("weatherResult"),
 
@@ -121,8 +125,9 @@ let theme = loadTheme();
 
 let currentDashboard = null;
 let activeRequestId = 0;
+let deferredInstallPrompt = null;
 
-/* ================= WEATHER RENDERING ================= */
+/* ================= HELPERS ================= */
 
 function isCurrentFavorite() {
   if (!currentDashboard) {
@@ -138,13 +143,43 @@ function isCurrentFavorite() {
   );
 }
 
+function formatShareTemperature(value) {
+  if (unit === "imperial") {
+    return `${Math.round(
+      (value * 9) / 5 + 32
+    )}°F`;
+  }
+
+  return `${Math.round(value)}°C`;
+}
+
+function buildWeatherShareText(weather) {
+  return [
+    `Weather in ${weather.locationName}`,
+    `${formatShareTemperature(weather.temperature)} · ${weather.description}`,
+    `Feels like ${formatShareTemperature(weather.feelsLike)}`,
+    `Humidity ${Math.round(weather.humidity)}%`,
+    `Wind ${weather.windSpeed.toFixed(1)} m/s`,
+    `AQI ${
+      weather.aqi !== null
+        ? `${weather.aqi}/5 · ${weather.aqiLabel}`
+        : "Unavailable"
+    }`,
+  ].join("\n");
+}
+
+/* ================= WEATHER RENDERING ================= */
+
 function renderAllWeather() {
   if (!currentDashboard) {
     return;
   }
 
-  const { weather, hourly, daily } =
-    currentDashboard;
+  const {
+    weather,
+    hourly,
+    daily,
+  } = currentDashboard;
 
   renderWeather(
     elements.weatherResult,
@@ -181,6 +216,10 @@ function renderAllWeather() {
     daily,
     unit
   );
+
+  if (elements.shareWeatherButton) {
+    elements.shareWeatherButton.hidden = false;
+  }
 }
 
 /* ================= SAVED CITIES ================= */
@@ -209,12 +248,18 @@ function showLoadingSkeleton() {
   );
 
   showDashboardSkeleton({
-    weatherContainer: elements.weatherResult,
-    hourlySection: elements.hourlySection,
-    hourlyContainer: elements.hourlyList,
-    forecastSection: elements.forecastSection,
-    forecastContainer: elements.forecastList,
-    mapSection: elements.mapSection,
+    weatherContainer:
+      elements.weatherResult,
+    hourlySection:
+      elements.hourlySection,
+    hourlyContainer:
+      elements.hourlyList,
+    forecastSection:
+      elements.forecastSection,
+    forecastContainer:
+      elements.forecastList,
+    mapSection:
+      elements.mapSection,
   });
 }
 
@@ -235,6 +280,10 @@ function clearWeatherResults() {
 
   hideWeatherMap(elements.mapSection);
 
+  if (elements.shareWeatherButton) {
+    elements.shareWeatherButton.hidden = true;
+  }
+
   document.body.dataset.weather = "default";
 }
 
@@ -247,7 +296,10 @@ async function loadWeather(
   const requestId = ++activeRequestId;
 
   clearStatus(elements.status);
-  setLoading(elements.searchButton, true);
+  setLoading(
+    elements.searchButton,
+    true
+  );
 
   elements.locationButton.disabled = true;
 
@@ -256,7 +308,9 @@ async function loadWeather(
   try {
     const data = await fetcher();
 
-    if (requestId !== activeRequestId) {
+    if (
+      requestId !== activeRequestId
+    ) {
       return;
     }
 
@@ -269,9 +323,13 @@ async function loadWeather(
     currentDashboard = {
       weather,
       hourly:
-        createHourlyForecast(data.forecast),
+        createHourlyForecast(
+          data.forecast
+        ),
       daily:
-        createFiveDayForecast(data.forecast),
+        createFiveDayForecast(
+          data.forecast
+        ),
     };
 
     renderAllWeather();
@@ -293,7 +351,9 @@ async function loadWeather(
         `Weather loaded for ${weather.locationName}.`
     );
   } catch (error) {
-    if (requestId !== activeRequestId) {
+    if (
+      requestId !== activeRequestId
+    ) {
       return;
     }
 
@@ -308,7 +368,9 @@ async function loadWeather(
         : "Unable to load weather."
     );
   } finally {
-    if (requestId === activeRequestId) {
+    if (
+      requestId === activeRequestId
+    ) {
       hideDashboardSkeleton(
         elements.weatherResult
       );
@@ -327,7 +389,8 @@ async function loadWeather(
 /* ================= SEARCH ================= */
 
 function searchWeather(city) {
-  const normalizedCity = city.trim();
+  const normalizedCity =
+    city.trim();
 
   if (!normalizedCity) {
     showError(
@@ -336,6 +399,7 @@ function searchWeather(city) {
     );
 
     elements.cityInput.focus();
+
     return;
   }
 
@@ -346,11 +410,17 @@ function searchWeather(city) {
   );
 }
 
-function searchWeatherByLocation(location) {
+function searchWeatherByLocation(
+  location
+) {
   if (
     !location ||
-    !Number.isFinite(location.latitude) ||
-    !Number.isFinite(location.longitude)
+    !Number.isFinite(
+      location.latitude
+    ) ||
+    !Number.isFinite(
+      location.longitude
+    )
   ) {
     showError(
       elements.status,
@@ -374,7 +444,8 @@ function searchWeatherByLocation(location) {
 
 const cityAutocomplete =
   createCityAutocomplete({
-    inputElement: elements.cityInput,
+    inputElement:
+      elements.cityInput,
     panelElement:
       elements.citySuggestions,
     fetchSuggestions:
@@ -403,7 +474,9 @@ elements.locationButton.addEventListener(
   () => {
     cityAutocomplete.close();
 
-    if (!navigator.geolocation) {
+    if (
+      !navigator.geolocation
+    ) {
       showError(
         elements.status,
         "Geolocation is not supported by this browser."
@@ -454,7 +527,8 @@ elements.locationButton.addEventListener(
         }
 
         if (
-          error.code === error.TIMEOUT
+          error.code ===
+          error.TIMEOUT
         ) {
           showError(
             elements.status,
@@ -514,7 +588,9 @@ elements.themeButton.addEventListener(
   "click",
   () => {
     theme =
-      document.documentElement.dataset
+      document
+        .documentElement
+        .dataset
         .theme === "dark"
         ? "light"
         : "dark";
@@ -524,29 +600,115 @@ elements.themeButton.addEventListener(
   }
 );
 
+/* ================= SHARE WEATHER ================= */
+
+async function shareCurrentWeather() {
+  if (!currentDashboard) {
+    showError(
+      elements.status,
+      "Search for a city before sharing weather."
+    );
+
+    return;
+  }
+
+  const weather =
+    currentDashboard.weather;
+
+  const shareText =
+    buildWeatherShareText(
+      weather
+    );
+
+  const shareData = {
+    title:
+      `WeatherScope — ${weather.locationName}`,
+    text: shareText,
+    url: window.location.href,
+  };
+
+  try {
+    if (navigator.share) {
+      await navigator.share(
+        shareData
+      );
+
+      showSuccess(
+        elements.status,
+        "Weather shared successfully."
+      );
+
+      return;
+    }
+
+    if (
+      navigator.clipboard?.writeText
+    ) {
+      await navigator.clipboard.writeText(
+        `${shareText}\n${window.location.href}`
+      );
+
+      showSuccess(
+        elements.status,
+        "Weather copied to clipboard."
+      );
+
+      return;
+    }
+
+    throw new Error(
+      "Sharing is not supported."
+    );
+  } catch (error) {
+    if (
+      error instanceof DOMException &&
+      error.name === "AbortError"
+    ) {
+      return;
+    }
+
+    showError(
+      elements.status,
+      "Unable to share weather."
+    );
+  }
+}
+
+elements.shareWeatherButton?.addEventListener(
+  "click",
+  shareCurrentWeather
+);
+
 /* ================= SAVED CITY ACTIONS ================= */
 
 function handleCityListClick(
   event,
   isFavorites
 ) {
-  const button = event.target.closest(
-    "button[data-action]"
-  );
+  const button =
+    event.target.closest(
+      "button[data-action]"
+    );
 
   if (!button) {
     return;
   }
 
-  const city = button.dataset.city;
-  const action = button.dataset.action;
+  const city =
+    button.dataset.city;
+
+  const action =
+    button.dataset.action;
 
   if (!city) {
     return;
   }
 
-  if (action === "search") {
+  if (
+    action === "search"
+  ) {
     searchWeather(city);
+
     return;
   }
 
@@ -554,12 +716,16 @@ function handleCityListClick(
     !isFavorites &&
     action === "remove"
   ) {
-    recentCities = removeRecentCity(
-      recentCities,
-      city
+    recentCities =
+      removeRecentCity(
+        recentCities,
+        city
+      );
+
+    saveRecentCities(
+      recentCities
     );
 
-    saveRecentCities(recentCities);
     renderSavedCities();
   }
 }
@@ -590,6 +756,7 @@ elements.clearRecentButton.addEventListener(
     clearRecentCities();
 
     recentCities = [];
+
     renderSavedCities();
 
     showSuccess(
@@ -619,7 +786,9 @@ elements.weatherResult.addEventListener(
     favoriteCities =
       toggleFavoriteCity(
         favoriteCities,
-        currentDashboard.weather.city
+        currentDashboard
+          .weather
+          .city
       );
 
     saveFavoriteCities(
@@ -633,12 +802,15 @@ elements.weatherResult.addEventListener(
 
 /* ================= INITIAL SETTINGS ================= */
 
-if (theme === "system") {
-  theme = window.matchMedia(
-    "(prefers-color-scheme: dark)"
-  ).matches
-    ? "dark"
-    : "light";
+if (
+  theme === "system"
+) {
+  theme =
+    window.matchMedia(
+      "(prefers-color-scheme: dark)"
+    ).matches
+      ? "dark"
+      : "light";
 }
 
 applyTheme(theme);
@@ -653,11 +825,12 @@ renderSavedCities();
 
 /* ================= PWA INSTALLATION ================= */
 
-let deferredInstallPrompt = null;
-
 function registerServiceWorker() {
   if (
-    !("serviceWorker" in navigator)
+    !(
+      "serviceWorker" in
+      navigator
+    )
   ) {
     return;
   }
@@ -665,7 +838,8 @@ function registerServiceWorker() {
   window.addEventListener(
     "load",
     () => {
-      navigator.serviceWorker
+      navigator
+        .serviceWorker
         .register(
           "/service-worker.js"
         )
@@ -684,7 +858,8 @@ window.addEventListener(
   (event) => {
     event.preventDefault();
 
-    deferredInstallPrompt = event;
+    deferredInstallPrompt =
+      event;
 
     if (
       elements.installAppButton
@@ -698,17 +873,21 @@ window.addEventListener(
 elements.installAppButton?.addEventListener(
   "click",
   async () => {
-    if (!deferredInstallPrompt) {
+    if (
+      !deferredInstallPrompt
+    ) {
       return;
     }
 
     deferredInstallPrompt.prompt();
 
     const choice =
-      await deferredInstallPrompt.userChoice;
+      await deferredInstallPrompt
+        .userChoice;
 
     if (
-      choice.outcome === "accepted"
+      choice.outcome ===
+      "accepted"
     ) {
       showSuccess(
         elements.status,
@@ -716,7 +895,8 @@ elements.installAppButton?.addEventListener(
       );
     }
 
-    deferredInstallPrompt = null;
+    deferredInstallPrompt =
+      null;
 
     if (
       elements.installAppButton
@@ -730,7 +910,8 @@ elements.installAppButton?.addEventListener(
 window.addEventListener(
   "appinstalled",
   () => {
-    deferredInstallPrompt = null;
+    deferredInstallPrompt =
+      null;
 
     if (
       elements.installAppButton
