@@ -927,4 +927,44 @@ window.addEventListener(
   }
 );
 
+/* ================= KEYBOARD SHORTCUTS ================= */
+
+document.addEventListener("keydown", (event) => {
+  const activeElement = document.activeElement;
+
+  const isTyping =
+    activeElement instanceof HTMLInputElement ||
+    activeElement instanceof HTMLTextAreaElement ||
+    activeElement?.isContentEditable;
+
+  const isSearchShortcut =
+    event.key === "/" ||
+    ((event.ctrlKey || event.metaKey) &&
+      event.key.toLowerCase() === "k");
+
+  if (isSearchShortcut && !isTyping) {
+    event.preventDefault();
+
+    elements.cityInput.focus();
+    elements.cityInput.select();
+
+    showSuccess(
+      elements.status,
+      "Search focused. Start typing a city."
+    );
+
+    return;
+  }
+
+  if (event.key === "Escape") {
+    cityAutocomplete.close();
+
+    if (activeElement === elements.cityInput) {
+      elements.cityInput.blur();
+    }
+
+    clearStatus(elements.status);
+  }
+});
+
 registerServiceWorker();
