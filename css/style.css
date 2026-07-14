@@ -1224,3 +1224,49 @@ input {
     height: 27px;
   }
 }
+
+/* ================= PWA INSTALL ================= */
+
+.install-app-button {
+  min-height: 42px;
+  padding: 0 16px;
+
+  color: #ffffff;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 700;
+
+  background: var(--primary);
+  border: 0;
+  border-radius: 12px;
+
+  cursor: pointer;
+  transition:
+    transform 160ms ease,
+    opacity 160ms ease,
+    background-color 160ms ease;
+}
+
+.install-app-button:hover {
+  transform: translateY(-1px);
+}
+
+.install-app-button:active {
+  transform: translateY(0);
+}
+
+.install-app-button:focus-visible {
+  outline: 3px solid rgba(53, 103, 233, 0.35);
+  outline-offset: 3px;
+}
+
+.install-app-button[hidden] {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  .install-app-button {
+    width: 100%;
+    min-height: 48px;
+  }
+}

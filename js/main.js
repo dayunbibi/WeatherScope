@@ -60,6 +60,8 @@ const elements = {
   imperialButton: document.getElementById("imperialBtn"),
 
   themeButton: document.getElementById("themeBtn"),
+  installAppButton:
+  document.getElementById("installAppBtn"),
   status: document.getElementById("status"),
   weatherResult: document.getElementById("weatherResult"),
 
@@ -504,3 +506,74 @@ updateUnitButtons(
 );
 
 renderSavedCities();
+
+let deferredInstallPrompt = null;
+
+function registerServiceWorker() {
+  if (!("serviceWorker" in navigator)) {
+    return;
+  }
+
+  window.addEventListener("load", () => {
+    navigator.serviceWorker
+      .register("/service-worker.js")
+      .catch((error) => {
+        console.error(
+          "Service worker registration failed:",
+          error
+        );
+      });
+  });
+}
+
+window.addEventListener(
+  "beforeinstallprompt",
+  (event) => {
+    event.preventDefault();
+
+    deferredInstallPrompt = event;
+
+    if (elements.installAppButton) {
+      elements.installAppButton.hidden = false;
+    }
+  }
+);
+
+elements.installAppButton?.addEventListener(
+  "click",
+  async () => {
+    if (!deferredInstallPrompt) {
+      return;
+    }
+
+    deferredInstallPrompt.prompt();
+
+    const choice =
+      await deferredInstallPrompt.userChoice;
+
+    if (choice.outcome === "accepted") {
+      showSuccess(
+        elements.status,
+        "WeatherScope installation started."
+      );
+    }
+
+    deferredInstallPrompt = null;
+    elements.installAppButton.hidden = true;
+  }
+);
+
+window.addEventListener("appinstalled", () => {
+  deferredInstallPrompt = null;
+
+  if (elements.installAppButton) {
+    elements.installAppButton.hidden = true;
+  }
+
+  showSuccess(
+    elements.status,
+    "WeatherScope was installed successfully."
+  );
+});
+
+registerServiceWorker();

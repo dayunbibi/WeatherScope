@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1"
+  />
+
+  <meta name="theme-color" content="#3567e9" />
+
+  <title>WeatherScope — Offline</title>
+
+  <style>
+    :root {
+      color-scheme: light dark;
+      font-family:
+        Inter,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      display: grid;
+      min-height: 100vh;
+      margin: 0;
+      padding: 24px;
+      place-items: center;
+      color: #182033;
+      background:
+        radial-gradient(
+          circle at top,
+          #dce7ff,
+          #f5f7ff 55%
+        );
+    }
+
+    .offline-card {
+      width: min(100%, 440px);
+      padding: 36px 28px;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.88);
+      border: 1px solid rgba(75, 98, 150, 0.14);
+      border-radius: 24px;
+      box-shadow: 0 22px 50px rgba(29, 54, 109, 0.16);
+      backdrop-filter: blur(14px);
+    }
+
+    .offline-icon {
+      display: grid;
+      width: 76px;
+      height: 76px;
+      margin: 0 auto 20px;
+      place-items: center;
+      font-size: 2.3rem;
+      background: #e4ecff;
+      border-radius: 22px;
+    }
+
+    h1 {
+      margin: 0 0 12px;
+      font-size: clamp(1.8rem, 6vw, 2.4rem);
+    }
+
+    p {
+      margin: 0 0 24px;
+      color: #5e687e;
+      line-height: 1.65;
+    }
+
+    button {
+      min-height: 48px;
+      padding: 0 22px;
+      color: white;
+      font: inherit;
+      font-weight: 700;
+      background: #3567e9;
+      border: 0;
+      border-radius: 14px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #2857cf;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      body {
+        color: #f4f7ff;
+        background:
+          radial-gradient(
+            circle at top,
+            #1c315f,
+            #0e1422 60%
+          );
+      }
+
+      .offline-card {
+        background: rgba(20, 29, 47, 0.9);
+        border-color: rgba(255, 255, 255, 0.09);
+      }
+
+      .offline-icon {
+        background: #20345f;
+      }
+
+      p {
+        color: #b6bfd2;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="offline-card">
+    <div class="offline-icon" aria-hidden="true">
+      ☁️
+    </div>
+
+    <h1>You’re offline</h1>
+
+    <p>
+      WeatherScope needs an internet connection to retrieve
+      current weather data. Check your connection and try again.
+    </p>
+
+    <button type="button" onclick="window.location.reload()">
+      Try again
+    </button>
+  </main>
+</body>
+</html>
