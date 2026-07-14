@@ -1,0 +1,11 @@
+{
+  "name": "weatherscope-portfolio",
+  "version": "3.1.0",
+  "private": true,
+  "scripts": {
+    "deploy": "vercel --prod"
+  },
+  "devDependencies": {
+    "vercel": "latest"
+  }
+}

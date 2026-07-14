@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="description"
+      content="WeatherScope - A modern weather dashboard with current weather, hourly forecast, and 5-day forecast."
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#3567e9" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+
+    <title>WeatherScope</title>
+
+    <link rel="icon" type="image/jpeg" href="images/favicon.jpeg" />
+
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+  crossorigin=""
+/>
+
+<link rel="stylesheet" href="css/style.css" />
+  </head>
+
+  <body>
+    <main class="app">
+
+      <!-- ================= HEADER ================= -->
+
+      <div class="top-actions"><button id="themeBtn" class="secondary-btn theme-btn" type="button">🌙 Dark</button></div>
+
+      <header class="app-header">
+        <p class="eyebrow">WEATHER DASHBOARD</p>
+
+        <h1>WeatherScope</h1>
+
+        <p class="subtitle">
+          Real-time weather information, hourly forecast and 5-day forecast.
+        </p>
+      </header>
+
+      <!-- ================= SEARCH ================= -->
+
+      <section
+        class="search-section"
+        aria-labelledby="searchHeading"
+      >
+
+        <h2
+          id="searchHeading"
+          class="sr-only"
+        >
+          Search Weather
+        </h2>
+
+        <form
+          id="searchForm"
+          class="search-form"
+          novalidate
+        >
+
+          <label for="cityInput">
+            City
+          </label>
+
+          <div class="search-box">
+
+  <div class="autocomplete-wrapper">
+
+    <input
+      type="search"
+      id="cityInput"
+      name="city"
+      placeholder="Search city..."
+      autocomplete="off"
+      maxlength="80"
+      aria-autocomplete="list"
+      aria-controls="citySuggestions"
+      aria-expanded="false"
+      required
+    />
+
+    <div
+      id="citySuggestions"
+      class="autocomplete-panel"
+      role="listbox"
+      aria-label="City suggestions"
+      hidden
+    ></div>
+
+  </div>
+
+  <button
+    id="searchBtn"
+    type="submit"
+  >
+    <span class="button-text">
+      Search
+    </span>
+
+    <span
+      class="button-spinner"
+      aria-hidden="true"
+    ></span>
+  </button>
+
+</div>
+              
+          <!-- NEW BUTTONS -->
+
+          <div class="toolbar">
+
+            <button
+              id="locationBtn"
+              type="button"
+              class="secondary-btn"
+            >
+              📍 Use My Location
+            </button>
+
+            <div class="unit-toggle">
+
+              <button
+                id="metricBtn"
+                type="button"
+                class="unit-btn active"
+              >
+                °C
+              </button>
+
+              <button
+                id="imperialBtn"
+                type="button"
+                class="unit-btn"
+              >
+                °F
+              </button>
+
+            </div>
+
+          </div>
+
+        </form>
+
+      </section>
+
+      <!-- ================= STATUS ================= -->
+
+      <section
+        id="status"
+        class="status"
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+      ></section>
+
+      <!-- ================= CURRENT WEATHER ================= -->
+
+      <section
+        class="result-section"
+        aria-label="Current Weather"
+      >
+
+        <div
+          id="weatherResult"
+          class="weather-result"
+        >
+
+          <div class="empty-state">
+
+            <span
+              class="empty-state-icon"
+              aria-hidden="true"
+            >
+              ☁️
+            </span>
+
+            <h2>
+              Search for a city
+            </h2>
+
+            <p>
+              Current weather will appear here.
+            </p>
+
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- ================= WEATHER MAP ================= -->
+
+<section
+  id="mapSection"
+  class="map-section"
+  aria-labelledby="mapHeading"
+  hidden
+>
+  <div class="section-heading">
+    <div>
+      <p class="section-kicker">
+        LOCATION
+      </p>
+
+      <h2 id="mapHeading">
+        Weather Map
+      </h2>
+    </div>
+  </div>
+
+  <div
+    id="weatherMap"
+    class="weather-map"
+    role="region"
+    aria-label="Map showing the selected weather location"
+  ></div>
+</section>
+
+      <!-- ================= HOURLY ================= -->
+
+      <section
+        id="hourlySection"
+        class="forecast-section"
+        hidden
+      >
+
+        <div class="section-heading">
+
+          <div>
+
+            <p class="section-kicker">
+              TODAY
+            </p>
+
+            <h2>
+              Hourly Forecast
+            </h2>
+
+          </div>
+
+        </div>
+
+        <div
+          id="hourlyList"
+          class="hourly-list"
+        ></div>
+
+      </section>
+
+      <!-- ================= 5 DAYS ================= -->
+
+      <section
+        id="forecastSection"
+        class="forecast-section"
+        hidden
+      >
+
+        <div class="section-heading">
+
+          <div>
+
+            <p class="section-kicker">
+              NEXT DAYS
+            </p>
+
+            <h2>
+              5-Day Forecast
+            </h2>
+
+          </div>
+
+        </div>
+
+        <div
+          id="forecastList"
+          class="forecast-list"
+        ></div>
+
+      </section>
+
+      <!-- ================= FAVOURITES ================= -->
+
+      <section class="recent-section" aria-labelledby="favoriteHeading">
+        <div class="section-heading"><h2 id="favoriteHeading">Favourite Cities</h2></div>
+        <p id="favoriteEmpty" class="recent-empty">No favourite cities yet.</p>
+        <ul id="favoriteList" class="recent-list"></ul>
+      </section>
+
+      <!-- ================= RECENT ================= -->
+
+      <section
+        class="recent-section"
+        aria-labelledby="recentHeading"
+      >
+
+        <div class="section-heading">
+
+          <h2 id="recentHeading">
+            Recent Cities
+          </h2>
+
+          <button
+            id="clearRecentBtn"
+            class="text-button"
+            type="button"
+            hidden
+          >
+            Clear All
+          </button>
+
+        </div>
+
+        <p
+          id="recentEmpty"
+          class="recent-empty"
+        >
+          No recent searches.
+        </p>
+
+        <ul
+          id="recentList"
+          class="recent-list"
+        ></ul>
+
+      </section>
+
+      <!-- ================= FOOTER ================= -->
+
+      <footer>
+
+        <small>
+
+          Powered by
+
+          <a
+            href="https://openweathermap.org/"
+            target="_blank"
+            rel="noreferrer"
+          >
+            OpenWeather API
+          </a>
+
+        </small>
+
+      </footer>
+
+    </main>
+
+    <script
+  src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+  integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+  crossorigin=""
+></script>
+
+<script
+  type="module"
+  src="js/main.js"
+></script>
+
+  </body>
+</html>
