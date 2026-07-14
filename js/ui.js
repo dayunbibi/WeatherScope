@@ -15,7 +15,92 @@ export function setLoading(button, isLoading) {
   button.classList.toggle("is-loading", isLoading);
   button.setAttribute("aria-busy", String(isLoading));
 }
+export function showDashboardSkeleton({
+  weatherContainer,
+  hourlySection,
+  hourlyContainer,
+  forecastSection,
+  forecastContainer,
+  mapSection,
+}) {
+  weatherContainer.innerHTML = `
+    <article class="weather-card skeleton-card" aria-hidden="true">
+      <header class="weather-card-header">
+        <div class="skeleton-header-copy">
+          <div class="skeleton skeleton-label"></div>
+          <div class="skeleton skeleton-title"></div>
+          <div class="skeleton skeleton-subtitle"></div>
+        </div>
 
+        <div class="skeleton skeleton-weather-icon"></div>
+      </header>
+
+      <div class="weather-primary">
+        <div>
+          <div class="skeleton skeleton-temperature"></div>
+          <div class="skeleton skeleton-condition"></div>
+        </div>
+
+        <div class="skeleton-range">
+          <div class="skeleton skeleton-range-line"></div>
+          <div class="skeleton skeleton-range-line"></div>
+        </div>
+      </div>
+
+      <div class="weather-details skeleton-details">
+        ${Array.from(
+          { length: 8 },
+          () => `
+            <div class="detail-card skeleton-detail-card">
+              <div class="skeleton skeleton-detail-label"></div>
+              <div class="skeleton skeleton-detail-value"></div>
+            </div>
+          `
+        ).join("")}
+      </div>
+    </article>
+  `;
+
+  hourlySection.hidden = false;
+  hourlyContainer.innerHTML = Array.from(
+    { length: 6 },
+    () => `
+      <article class="hourly-card skeleton-hourly-card" aria-hidden="true">
+        <div class="skeleton skeleton-hour"></div>
+        <div class="skeleton skeleton-hourly-icon"></div>
+        <div class="skeleton skeleton-hourly-temp"></div>
+        <div class="skeleton skeleton-hourly-text"></div>
+      </article>
+    `
+  ).join("");
+
+  forecastSection.hidden = false;
+  forecastContainer.innerHTML = Array.from(
+    { length: 5 },
+    () => `
+      <article class="forecast-card skeleton-forecast-card" aria-hidden="true">
+        <div class="skeleton-forecast-date">
+          <div class="skeleton skeleton-forecast-day"></div>
+          <div class="skeleton skeleton-forecast-calendar"></div>
+        </div>
+
+        <div class="skeleton skeleton-forecast-icon"></div>
+        <div class="skeleton skeleton-forecast-description"></div>
+        <div class="skeleton skeleton-forecast-temperature"></div>
+      </article>
+    `
+  ).join("");
+
+  if (mapSection) {
+    mapSection.hidden = true;
+  }
+
+  weatherContainer.setAttribute("aria-busy", "true");
+}
+
+export function hideDashboardSkeleton(weatherContainer) {
+  weatherContainer.removeAttribute("aria-busy");
+}
 export function clearStatus(element) {
   element.textContent = "";
   element.className = "status";

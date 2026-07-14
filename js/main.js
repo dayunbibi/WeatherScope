@@ -3,9 +3,20 @@ import {
   fetchWeatherDashboardByCity,
   fetchWeatherDashboardByCoords,
 } from "./api.js";
+
 import { createCityAutocomplete } from "./autocomplete.js";
-import { createFiveDayForecast, createHourlyForecast, WeatherData } from "./models.js";
-import { hideWeatherMap, renderWeatherMap } from "./map.js";
+
+import {
+  createFiveDayForecast,
+  createHourlyForecast,
+  WeatherData,
+} from "./models.js";
+
+import {
+  hideWeatherMap,
+  renderWeatherMap,
+} from "./map.js";
+
 import {
   addRecentCity,
   clearRecentCities,
@@ -20,16 +31,19 @@ import {
   saveUnit,
   toggleFavoriteCity,
 } from "./storage.js";
+
 import {
   applyTheme,
   clearForecast,
   clearStatus,
+  hideDashboardSkeleton,
   renderFavoriteCities,
   renderForecast,
   renderHourly,
   renderRecentCities,
   renderWeather,
   setLoading,
+  showDashboardSkeleton,
   showError,
   showSuccess,
   updateUnitButtons,
@@ -70,11 +84,20 @@ let recentCities = loadRecentCities();
 let favoriteCities = loadFavoriteCities();
 let unit = loadUnit();
 let theme = loadTheme();
+
 let currentDashboard = null;
 let activeRequestId = 0;
 
 function isCurrentFavorite() {
-  return currentDashboard && favoriteCities.some((city) => city.toLowerCase() === currentDashboard.weather.city.toLowerCase());
+  if (!currentDashboard) {
+    return false;
+  }
+
+  const currentCity = currentDashboard.weather.city.toLowerCase();
+
+  return favoriteCities.some(
+    (city) => city.toLowerCase() === currentCity
+  );
 }
 
 function renderAllWeather() {
@@ -111,33 +134,33 @@ function renderAllWeather() {
 }
 
 function renderSavedCities() {
-  renderRecentCities({ listElement: elements.recentList, emptyElement: elements.recentEmpty, clearButton: elements.clearRecentButton, cities: recentCities });
-  renderFavoriteCities({ listElement: elements.favoriteList, emptyElement: elements.favoriteEmpty, cities: favoriteCities });
+  renderRecentCities({
+    listElement: elements.recentList,
+    emptyElement: elements.recentEmpty,
+    clearButton: elements.clearRecentButton,
+    cities: recentCities,
+  });
+
+  renderFavoriteCities({
+    listElement: elements.favoriteList,
+    emptyElement: elements.favoriteEmpty,
+    cities: favoriteCities,
+  });
 }
 
-async function loadWeather(fetcher, successLabel) {
-  const requestId = ++activeRequestId;
-  clearStatus(elements.status);
-  setLoading(elements.searchButton, true);
-  elements.locationButton.disabled = true;
+function showLoadingSkeleton() {
+  showDashboardSkeleton({
+    weatherContainer: elements.weatherResult,
+    hourlySection: elements.hourlySection,
+    hourlyContainer: elements.hourlyList,
+    forecastSection: elements.forecastSection,
+    forecastContainer: elements.forecastList,
+    mapSection: elements.mapSection,
+  });
+}
 
-  try {
-    const data = await fetcher();
-    if (requestId !== activeRequestId) return;
-
-    const weather = new WeatherData(data.currentWeather, data.airQuality, data.uvIndex);
-    currentDashboard = { weather, hourly: createHourlyForecast(data.forecast), daily: createFiveDayForecast(data.forecast) };
-    renderAllWeather();
-
-    recentCities = addRecentCity(recentCities, weather.city);
-    saveRecentCities(recentCities);
-    renderSavedCities();
-    elements.cityInput.value = weather.city;
-    showSuccess(elements.status, successLabel || `Weather loaded for ${weather.locationName}.`);
-  } catch (error) {
-  if (requestId !== activeRequestId) {
-    return;
-  }
+function clearWeatherResults() {
+  elements.weatherResult.replaceChildren();
 
   clearForecast(
     elements.hourlySection,
@@ -147,15 +170,70 @@ async function loadWeather(fetcher, successLabel) {
   );
 
   hideWeatherMap(elements.mapSection);
+}
 
-  showError(
-    elements.status,
-    error instanceof Error
-      ? error.message
-      : "Unable to load weather."
-  );
-} finally {
+async function loadWeather(fetcher, successLabel) {
+  const requestId = ++activeRequestId;
+
+  clearStatus(elements.status);
+  setLoading(elements.searchButton, true);
+  elements.locationButton.disabled = true;
+
+  showLoadingSkeleton();
+
+  try {
+    const data = await fetcher();
+
+    if (requestId !== activeRequestId) {
+      return;
+    }
+
+    const weather = new WeatherData(
+      data.currentWeather,
+      data.airQuality,
+      data.uvIndex
+    );
+
+    currentDashboard = {
+      weather,
+      hourly: createHourlyForecast(data.forecast),
+      daily: createFiveDayForecast(data.forecast),
+    };
+
+    renderAllWeather();
+
+    recentCities = addRecentCity(
+      recentCities,
+      weather.city
+    );
+
+    saveRecentCities(recentCities);
+    renderSavedCities();
+
+    elements.cityInput.value = weather.city;
+
+    showSuccess(
+      elements.status,
+      successLabel ||
+        `Weather loaded for ${weather.locationName}.`
+    );
+  } catch (error) {
+    if (requestId !== activeRequestId) {
+      return;
+    }
+
+    currentDashboard = null;
+    clearWeatherResults();
+
+    showError(
+      elements.status,
+      error instanceof Error
+        ? error.message
+        : "Unable to load weather."
+    );
+  } finally {
     if (requestId === activeRequestId) {
+      hideDashboardSkeleton(elements.weatherResult);
       setLoading(elements.searchButton, false);
       elements.locationButton.disabled = false;
     }
@@ -163,14 +241,23 @@ async function loadWeather(fetcher, successLabel) {
 }
 
 function searchWeather(city) {
-  const normalized = city.trim();
-  if (!normalized) {
-    showError(elements.status, "Enter a city name before searching.");
+  const normalizedCity = city.trim();
+
+  if (!normalizedCity) {
+    showError(
+      elements.status,
+      "Enter a city name before searching."
+    );
+
     elements.cityInput.focus();
     return;
   }
-  loadWeather(() => fetchWeatherDashboardByCity(normalized));
+
+  loadWeather(() =>
+    fetchWeatherDashboardByCity(normalizedCity)
+  );
 }
+
 function searchWeatherByLocation(location) {
   if (
     !location ||
@@ -194,6 +281,14 @@ function searchWeatherByLocation(location) {
     `Weather loaded for ${location.name}.`
   );
 }
+
+const cityAutocomplete = createCityAutocomplete({
+  inputElement: elements.cityInput,
+  panelElement: elements.citySuggestions,
+  fetchSuggestions: fetchLocationSuggestions,
+  onSelect: searchWeatherByLocation,
+});
+
 elements.searchForm.addEventListener(
   "submit",
   (event) => {
@@ -204,70 +299,208 @@ elements.searchForm.addEventListener(
   }
 );
 
-elements.locationButton.addEventListener("click", () => {
-  if (!navigator.geolocation) return showError(elements.status, "Geolocation is not supported by this browser.");
-  showSuccess(elements.status, "Requesting your location…");
-  navigator.geolocation.getCurrentPosition(
-    ({ coords }) => loadWeather(() => fetchWeatherDashboardByCoords(coords.latitude, coords.longitude), "Weather loaded for your current location."),
-    (error) => showError(elements.status, error.code === 1 ? "Location permission was denied. Enable it in your browser settings." : "Unable to determine your location."),
-    { enableHighAccuracy: true, timeout: 10000, maximumAge: 300000 }
-  );
-});
+elements.locationButton.addEventListener(
+  "click",
+  () => {
+    cityAutocomplete.close();
+
+    if (!navigator.geolocation) {
+      showError(
+        elements.status,
+        "Geolocation is not supported by this browser."
+      );
+
+      return;
+    }
+
+    showSuccess(
+      elements.status,
+      "Requesting your location…"
+    );
+
+    navigator.geolocation.getCurrentPosition(
+      ({ coords }) => {
+        loadWeather(
+          () =>
+            fetchWeatherDashboardByCoords(
+              coords.latitude,
+              coords.longitude
+            ),
+          "Weather loaded for your current location."
+        );
+      },
+      (error) => {
+        if (error.code === error.PERMISSION_DENIED) {
+          showError(
+            elements.status,
+            "Location permission was denied. Enable it in your browser settings."
+          );
+
+          return;
+        }
+
+        if (error.code === error.POSITION_UNAVAILABLE) {
+          showError(
+            elements.status,
+            "Your location is currently unavailable. Try again or search for your city."
+          );
+
+          return;
+        }
+
+        if (error.code === error.TIMEOUT) {
+          showError(
+            elements.status,
+            "Location request timed out. Try again or search for your city."
+          );
+
+          return;
+        }
+
+        showError(
+          elements.status,
+          "Unable to determine your location."
+        );
+      },
+      {
+        enableHighAccuracy: false,
+        timeout: 30000,
+        maximumAge: 600000,
+      }
+    );
+  }
+);
 
 function setUnit(nextUnit) {
   unit = nextUnit;
+
   saveUnit(unit);
-  updateUnitButtons(elements.metricButton, elements.imperialButton, unit);
+
+  updateUnitButtons(
+    elements.metricButton,
+    elements.imperialButton,
+    unit
+  );
+
   renderAllWeather();
 }
 
-elements.metricButton.addEventListener("click", () => setUnit("metric"));
-elements.imperialButton.addEventListener("click", () => setUnit("imperial"));
+elements.metricButton.addEventListener(
+  "click",
+  () => setUnit("metric")
+);
 
-elements.themeButton.addEventListener("click", () => {
-  theme = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
-  saveTheme(theme);
-  applyTheme(theme);
-});
+elements.imperialButton.addEventListener(
+  "click",
+  () => setUnit("imperial")
+);
+
+elements.themeButton.addEventListener(
+  "click",
+  () => {
+    theme =
+      document.documentElement.dataset.theme === "dark"
+        ? "light"
+        : "dark";
+
+    saveTheme(theme);
+    applyTheme(theme);
+  }
+);
 
 function handleCityListClick(event, isFavorites) {
-  const button = event.target.closest("button[data-action]");
-  if (!button) return;
+  const button = event.target.closest(
+    "button[data-action]"
+  );
+
+  if (!button) {
+    return;
+  }
+
   const city = button.dataset.city;
-  if (button.dataset.action === "search") searchWeather(city);
-  if (!isFavorites && button.dataset.action === "remove") {
-    recentCities = removeRecentCity(recentCities, city);
+  const action = button.dataset.action;
+
+  if (!city) {
+    return;
+  }
+
+  if (action === "search") {
+    searchWeather(city);
+    return;
+  }
+
+  if (!isFavorites && action === "remove") {
+    recentCities = removeRecentCity(
+      recentCities,
+      city
+    );
+
     saveRecentCities(recentCities);
     renderSavedCities();
   }
 }
 
-elements.recentList.addEventListener("click", (event) => handleCityListClick(event, false));
-elements.favoriteList.addEventListener("click", (event) => handleCityListClick(event, true));
+elements.recentList.addEventListener(
+  "click",
+  (event) => handleCityListClick(event, false)
+);
 
-elements.clearRecentButton.addEventListener("click", () => {
-  clearRecentCities();
-  recentCities = [];
-  renderSavedCities();
-  showSuccess(elements.status, "Recent searches cleared.");
-});
+elements.favoriteList.addEventListener(
+  "click",
+  (event) => handleCityListClick(event, true)
+);
 
-elements.weatherResult.addEventListener("click", (event) => {
-  if (!event.target.closest("#favoriteCurrentBtn") || !currentDashboard) return;
-  favoriteCities = toggleFavoriteCity(favoriteCities, currentDashboard.weather.city);
-  saveFavoriteCities(favoriteCities);
-  renderSavedCities();
-  renderAllWeather();
-});
+elements.clearRecentButton.addEventListener(
+  "click",
+  () => {
+    clearRecentCities();
 
-const cityAutocomplete = createCityAutocomplete({
-  inputElement: elements.cityInput,
-  panelElement: elements.citySuggestions,
-  fetchSuggestions: fetchLocationSuggestions,
-  onSelect: searchWeatherByLocation,
-});
+    recentCities = [];
+    renderSavedCities();
 
-if (theme === "system") theme = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    showSuccess(
+      elements.status,
+      "Recent searches cleared."
+    );
+  }
+);
+
+elements.weatherResult.addEventListener(
+  "click",
+  (event) => {
+    const favoriteButton = event.target.closest(
+      "#favoriteCurrentBtn"
+    );
+
+    if (!favoriteButton || !currentDashboard) {
+      return;
+    }
+
+    favoriteCities = toggleFavoriteCity(
+      favoriteCities,
+      currentDashboard.weather.city
+    );
+
+    saveFavoriteCities(favoriteCities);
+    renderSavedCities();
+    renderAllWeather();
+  }
+);
+
+if (theme === "system") {
+  theme = window.matchMedia(
+    "(prefers-color-scheme: dark)"
+  ).matches
+    ? "dark"
+    : "light";
+}
+
 applyTheme(theme);
-updateUnitButtons(elements.metricButton, elements.imperialButton, unit);
+
+updateUnitButtons(
+  elements.metricButton,
+  elements.imperialButton,
+  unit
+);
+
 renderSavedCities();
