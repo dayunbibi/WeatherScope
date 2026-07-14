@@ -224,3 +224,65 @@ export function applyTheme(theme) {
     button.setAttribute("aria-label", `Switch to ${theme === "dark" ? "light" : "dark"} mode`);
   }
 }
+export function applyWeatherTheme(weather) {
+  if (!weather) {
+    document.body.dataset.weather = "default";
+    return;
+  }
+
+  const condition = String(
+    weather.description ||
+      weather.condition ||
+      weather.mainCondition ||
+      weather.main ||
+      ""
+  )
+    .trim()
+    .toLowerCase();
+
+  const iconCode = String(
+    weather.icon ||
+      weather.iconCode ||
+      ""
+  )
+    .trim()
+    .toLowerCase();
+
+  const isNight = iconCode.endsWith("n");
+
+  let weatherTheme = "clear";
+
+  if (
+    condition.includes("thunder") ||
+    condition.includes("rain") ||
+    condition.includes("drizzle")
+  ) {
+    weatherTheme = "rain";
+  } else if (condition.includes("snow")) {
+    weatherTheme = "snow";
+  } else if (
+    condition.includes("cloud") ||
+    condition.includes("mist") ||
+    condition.includes("fog") ||
+    condition.includes("haze") ||
+    condition.includes("smoke") ||
+    condition.includes("dust") ||
+    condition.includes("sand") ||
+    condition.includes("ash") ||
+    condition.includes("squall") ||
+    condition.includes("tornado")
+  ) {
+    weatherTheme = "clouds";
+  } else if (isNight) {
+    weatherTheme = "night";
+  }
+
+  document.body.dataset.weather = weatherTheme;
+
+  console.log("Applied weather background:", {
+    condition,
+    iconCode,
+    isNight,
+    weatherTheme,
+  });
+}

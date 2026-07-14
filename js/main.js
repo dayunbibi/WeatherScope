@@ -34,6 +34,7 @@ import {
 
 import {
   applyTheme,
+  applyWeatherTheme,
   clearForecast,
   clearStatus,
   hideDashboardSkeleton,
@@ -113,6 +114,7 @@ function renderAllWeather() {
     unit,
     isCurrentFavorite()
   );
+  applyWeatherTheme(currentDashboard.weather);
 
   renderWeatherMap({
     mapElement: elements.weatherMap,

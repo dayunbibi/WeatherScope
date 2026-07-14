@@ -1270,3 +1270,162 @@ input {
     min-height: 48px;
   }
 }
+
+/* ================= DYNAMIC WEATHER BACKGROUND ================= */
+
+body {
+  min-height: 100vh;
+  background-attachment: fixed;
+  transition:
+    background 500ms ease,
+    color 300ms ease;
+}
+
+/* Default */
+
+body[data-weather="default"] {
+  background:
+    radial-gradient(
+      circle at 20% 8%,
+      rgba(219, 231, 255, 0.9),
+      transparent 30%
+    ),
+    linear-gradient(
+      180deg,
+      #e4ecfa 0%,
+      #f5f7ff 55%,
+      #eef2fb 100%
+    );
+}
+
+/* Clear weather */
+
+body[data-weather="clear"] {
+  background:
+    radial-gradient(
+      circle at 18% 8%,
+      rgba(255, 238, 145, 0.85),
+      transparent 27%
+    ),
+    linear-gradient(
+      180deg,
+      #8fd3ff 0%,
+      #d8efff 48%,
+      #f6faff 100%
+    );
+}
+
+/* Cloudy / foggy weather */
+
+body[data-weather="clouds"] {
+  background:
+    radial-gradient(
+      circle at 22% 10%,
+      rgba(255, 255, 255, 0.65),
+      transparent 32%
+    ),
+    linear-gradient(
+      180deg,
+      #aab9c9 0%,
+      #d7e0e9 54%,
+      #f3f6f9 100%
+    );
+}
+
+/* Rain / thunderstorm */
+
+body[data-weather="rain"] {
+  background:
+    radial-gradient(
+      circle at 18% 10%,
+      rgba(190, 211, 230, 0.32),
+      transparent 31%
+    ),
+    linear-gradient(
+      180deg,
+      #55758f 0%,
+      #86a0b6 52%,
+      #dce7ef 100%
+    );
+}
+
+/* Snow */
+
+body[data-weather="snow"] {
+  background:
+    radial-gradient(
+      circle at 20% 12%,
+      rgba(255, 255, 255, 0.95),
+      transparent 32%
+    ),
+    linear-gradient(
+      180deg,
+      #b9dff5 0%,
+      #e9f6fd 58%,
+      #ffffff 100%
+    );
+}
+
+/* Clear night */
+
+body[data-weather="night"] {
+  background:
+    radial-gradient(
+      circle at 78% 10%,
+      rgba(210, 225, 255, 0.32),
+      transparent 25%
+    ),
+    linear-gradient(
+      180deg,
+      #17345f 0%,
+      #2b527e 52%,
+      #6788a7 100%
+    );
+}
+
+/* Header text contrast */
+
+body[data-weather="clear"] .app-header,
+body[data-weather="clouds"] .app-header,
+body[data-weather="rain"] .app-header,
+body[data-weather="snow"] .app-header,
+body[data-weather="night"] .app-header {
+  color: #1f2937;
+}
+
+body[data-weather="clear"] .subtitle,
+body[data-weather="clear"] .eyebrow,
+body[data-weather="clouds"] .subtitle,
+body[data-weather="clouds"] .eyebrow,
+body[data-weather="rain"] .subtitle,
+body[data-weather="rain"] .eyebrow,
+body[data-weather="snow"] .subtitle,
+body[data-weather="snow"] .eyebrow,
+body[data-weather="night"] .subtitle,
+body[data-weather="night"] .eyebrow {
+  color: #5f6b7a;
+}
+
+/* Keep the main app panel readable */
+
+body[data-weather] .app {
+  background: rgba(248, 250, 255, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  box-shadow: 0 24px 70px rgba(24, 48, 83, 0.18);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+[data-theme="dark"] body[data-weather] .app,
+html[data-theme="dark"] body[data-weather] .app {
+  background: rgba(19, 27, 43, 0.9);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+/* Reduced motion accessibility */
+
+@media (prefers-reduced-motion: reduce) {
+  body {
+    transition: none;
+  }
+}
