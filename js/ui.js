@@ -248,7 +248,7 @@ export function applyWeatherTheme(weather) {
     .trim()
     .toLowerCase();
 
-  const isNight = iconCode.endsWith("n");
+  const isNight = weather.isNight;
 
   let weatherTheme = "clear";
 
