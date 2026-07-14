@@ -305,3 +305,108 @@ export function applyWeatherTheme(weather) {
     weatherTheme,
   });
 }
+
+export function renderHighlights({
+  section,
+  container,
+  weather,
+  unit,
+}) {
+  if (!section || !container || !weather) {
+    return;
+  }
+
+  container.innerHTML = `
+    <article class="highlight-card">
+      <span class="highlight-icon" aria-hidden="true">🌡️</span>
+      <p class="highlight-label">Feels Like</p>
+      <strong class="highlight-value">
+        ${formatTemperature(weather.feelsLike, unit)}
+      </strong>
+    </article>
+
+    <article class="highlight-card">
+      <span class="highlight-icon" aria-hidden="true">💧</span>
+      <p class="highlight-label">Humidity</p>
+      <strong class="highlight-value">
+        ${Math.round(weather.humidity)}%
+      </strong>
+    </article>
+
+    <article class="highlight-card">
+      <span class="highlight-icon" aria-hidden="true">💨</span>
+      <p class="highlight-label">Wind</p>
+      <strong class="highlight-value">
+        ${formatWind(weather.windSpeed, unit)}
+      </strong>
+    </article>
+
+    <article class="highlight-card">
+      <span class="highlight-icon" aria-hidden="true">🧭</span>
+      <p class="highlight-label">Pressure</p>
+      <strong class="highlight-value">
+        ${Math.round(weather.pressure)} hPa
+      </strong>
+    </article>
+
+    <article class="highlight-card aqi-highlight aqi-${escapeHtml(
+      weather.aqiClass
+    )}">
+      <span class="highlight-icon" aria-hidden="true">🌿</span>
+      <p class="highlight-label">Air Quality</p>
+      <strong class="highlight-value">
+        ${
+          weather.aqi !== null
+            ? `${weather.aqi}/5 · ${escapeHtml(weather.aqiLabel)}`
+            : "Unavailable"
+        }
+      </strong>
+      <small class="highlight-meta">
+        ${
+          weather.pm25 !== null
+            ? `PM2.5 ${escapeHtml(weather.formattedPm25)}`
+            : "PM2.5 unavailable"
+        }
+      </small>
+    </article>
+
+    <article class="highlight-card">
+      <span class="highlight-icon" aria-hidden="true">☀️</span>
+      <p class="highlight-label">UV Index</p>
+      <strong class="highlight-value">
+        ${
+          weather.uvIndex !== null
+            ? `${weather.uvIndex.toFixed(1)} · ${escapeHtml(weather.uvLabel)}`
+            : "Unavailable"
+        }
+      </strong>
+    </article>
+
+    <article class="highlight-card">
+      <span class="highlight-icon" aria-hidden="true">🌅</span>
+      <p class="highlight-label">Sunrise</p>
+      <strong class="highlight-value">
+        ${escapeHtml(weather.sunriseTime)}
+      </strong>
+    </article>
+
+    <article class="highlight-card">
+      <span class="highlight-icon" aria-hidden="true">🌇</span>
+      <p class="highlight-label">Sunset</p>
+      <strong class="highlight-value">
+        ${escapeHtml(weather.sunsetTime)}
+      </strong>
+    </article>
+  `;
+
+  section.hidden = false;
+}
+
+export function clearHighlights(section, container) {
+  if (!section || !container) {
+    return;
+  }
+
+  container.replaceChildren();
+  section.hidden = true;
+}
