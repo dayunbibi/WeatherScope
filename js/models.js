@@ -86,17 +86,38 @@ export class WeatherData {
   }
 
   get aqiLabel() {
-    const labels = [
-      "Unknown",
-      "Good",
-      "Fair",
-      "Moderate",
-      "Poor",
-      "Very poor",
-    ];
+  const labels = [
+    "Unknown",
+    "Good",
+    "Fair",
+    "Moderate",
+    "Poor",
+    "Very Poor",
+  ];
 
-    return labels[this.aqi || 0] || "Unknown";
+  return labels[this.aqi || 0] || "Unknown";
+}
+
+get aqiClass() {
+  const classes = [
+    "unknown",
+    "good",
+    "fair",
+    "moderate",
+    "poor",
+    "very-poor",
+  ];
+
+  return classes[this.aqi || 0] || "unknown";
+}
+
+get formattedPm25() {
+  if (!Number.isFinite(this.pm25)) {
+    return "Unavailable";
   }
+
+  return `${this.pm25.toFixed(1)} μg/m³`;
+}
 
   get uvLabel() {
     if (this.uvIndex === null) {

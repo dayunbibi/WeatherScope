@@ -1429,3 +1429,122 @@ html[data-theme="dark"] body[data-weather] .app {
     transition: none;
   }
 }
+/* ================= AQI STATUS ================= */
+
+.aqi-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.aqi-card::before {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 5px;
+  content: "";
+  background: var(--aqi-color, #8a94a6);
+}
+
+.detail-card-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.aqi-status {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  padding: 3px 9px;
+
+  color: var(--aqi-text, #334155);
+  font-size: 0.75rem;
+  font-weight: 800;
+
+  background: var(--aqi-soft, rgba(148, 163, 184, 0.2));
+  border-radius: 999px;
+}
+
+.aqi-value {
+  display: block;
+  margin-top: 10px;
+
+  color: var(--aqi-text, var(--text));
+  font-size: 1.65rem;
+  line-height: 1;
+}
+
+.aqi-pm25 {
+  display: block;
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+/* Unknown */
+
+.aqi-unknown {
+  --aqi-color: #8a94a6;
+  --aqi-soft: rgba(138, 148, 166, 0.16);
+  --aqi-text: #5f6b7a;
+}
+
+/* Good */
+
+.aqi-good {
+  --aqi-color: #22a06b;
+  --aqi-soft: rgba(34, 160, 107, 0.15);
+  --aqi-text: #147548;
+}
+
+/* Fair */
+
+.aqi-fair {
+  --aqi-color: #7ca838;
+  --aqi-soft: rgba(124, 168, 56, 0.16);
+  --aqi-text: #557822;
+}
+
+/* Moderate */
+
+.aqi-moderate {
+  --aqi-color: #d6a21d;
+  --aqi-soft: rgba(214, 162, 29, 0.17);
+  --aqi-text: #8a6500;
+}
+
+/* Poor */
+
+.aqi-poor {
+  --aqi-color: #e0792f;
+  --aqi-soft: rgba(224, 121, 47, 0.16);
+  --aqi-text: #a84f16;
+}
+
+/* Very Poor */
+
+.aqi-very-poor {
+  --aqi-color: #d64a4a;
+  --aqi-soft: rgba(214, 74, 74, 0.16);
+  --aqi-text: #a92f2f;
+}
+
+html[data-theme="dark"] .aqi-good {
+  --aqi-text: #72d5a8;
+}
+
+html[data-theme="dark"] .aqi-fair {
+  --aqi-text: #b5d875;
+}
+
+html[data-theme="dark"] .aqi-moderate {
+  --aqi-text: #f1cd64;
+}
+
+html[data-theme="dark"] .aqi-poor {
+  --aqi-text: #f4a56f;
+}
+
+html[data-theme="dark"] .aqi-very-poor {
+  --aqi-text: #ff8f8f;
+}

@@ -147,8 +147,27 @@ export function renderWeather(container, weather, unit, isFavorite) {
         <div class="detail-card"><dt>Humidity</dt><dd>${Math.round(weather.humidity)}%</dd></div>
         <div class="detail-card"><dt>Wind</dt><dd>${formatWind(weather.windSpeed, unit)}</dd></div>
         <div class="detail-card"><dt>Pressure</dt><dd>${Math.round(weather.pressure)} hPa</dd></div>
-        <div class="detail-card accent-card"><dt>Air quality</dt><dd>${weather.aqi ? `${weather.aqi}/5 · ${weather.aqiLabel}` : "Unavailable"}</dd><small>${weather.pm25 !== null ? `PM2.5 ${weather.pm25.toFixed(1)} μg/m³` : ""}</small></div>
-        <div class="detail-card accent-card"><dt>UV index</dt><dd>${weather.uvIndex !== null ? `${weather.uvIndex.toFixed(1)} · ${weather.uvLabel}` : "Unavailable"}</dd></div>
+<div class="detail-card aqi-card aqi-${escapeHtml(weather.aqiClass)}">
+  <div class="detail-card-heading">
+    <dt>Air quality</dt>
+
+    <span class="aqi-status">
+      ${escapeHtml(weather.aqiLabel)}
+    </span>
+  </div>
+
+  <dd class="aqi-value">
+    ${weather.aqi !== null ? `${weather.aqi}/5` : "Unavailable"}
+  </dd>
+
+  <small class="aqi-pm25">
+    ${
+      weather.pm25 !== null
+        ? `PM2.5 ${escapeHtml(weather.formattedPm25)}`
+        : "PM2.5 unavailable"
+    }
+  </small>
+</div>        <div class="detail-card accent-card"><dt>UV index</dt><dd>${weather.uvIndex !== null ? `${weather.uvIndex.toFixed(1)} · ${weather.uvLabel}` : "Unavailable"}</dd></div>
         <div class="detail-card"><dt>Sunrise</dt><dd>${escapeHtml(weather.formatCityTime(weather.sunriseTimestamp))}</dd></div>
         <div class="detail-card"><dt>Sunset</dt><dd>${escapeHtml(weather.formatCityTime(weather.sunsetTimestamp))}</dd></div>
       </dl>
