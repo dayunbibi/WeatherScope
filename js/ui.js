@@ -1020,38 +1020,103 @@ export function clearHighlights(
   section.hidden = true;
 }
 
+function getRecommendationPreferenceKey(item) {
+  const title = String(item.title || "")
+    .trim()
+    .toLowerCase();
+
+  if (title.includes("clothing")) {
+    return "clothing";
+  }
+
+  if (
+    title.includes("umbrella") ||
+    title.includes("rain safety") ||
+    title.includes("snow")
+  ) {
+    return "umbrella";
+  }
+
+  if (title.includes("uv protection")) {
+    return "uv";
+  }
+
+  if (title.includes("hydration")) {
+    return "hydration";
+  }
+
+  if (title.includes("wind")) {
+    return "wind";
+  }
+
+  if (
+    title.includes("outdoor activity") ||
+    title.includes("outdoor score")
+  ) {
+    return "outdoor";
+  }
+
+  if (title.includes("air quality")) {
+    return "airQuality";
+  }
+
+  if (title.includes("pet walk")) {
+    return "petWalk";
+  }
+
+  return null;
+}
+
 export function renderRecommendations(
   section,
   container,
-  recommendations
+  recommendations,
+  preferences = {}
 ) {
-  if (!section || !container) return;
+  if (!section || !container) {
+    return;
+  }
 
-  if (!recommendations.length) {
+  const visibleRecommendations =
+    recommendations.filter((item) => {
+      const preferenceKey =
+        getRecommendationPreferenceKey(item);
+
+      if (!preferenceKey) {
+        return true;
+      }
+
+      return preferences[preferenceKey] !== false;
+    });
+
+  if (visibleRecommendations.length === 0) {
+    container.replaceChildren();
     section.hidden = true;
     return;
   }
 
-  container.innerHTML = recommendations
+  container.innerHTML = visibleRecommendations
     .map(
       (item) => `
-      <article class="recommendation-card">
-        <div class="recommendation-icon">
-          ${item.icon}
-        </div>
+        <article class="recommendation-card">
+          <div
+            class="recommendation-icon"
+            aria-hidden="true"
+          >
+            ${escapeHtml(item.icon)}
+          </div>
 
-        <div class="recommendation-content">
-          <h3>${item.title}</h3>
-          <p>${item.text}</p>
-        </div>
-      </article>
-    `
+          <div class="recommendation-content">
+            <h3>${escapeHtml(item.title)}</h3>
+            <p>${escapeHtml(item.text)}</p>
+          </div>
+        </article>
+      `
     )
     .join("");
 
   section.hidden = false;
 }
-
 export function clearRecommendations(
   section,
   container

@@ -363,13 +363,112 @@
   aria-labelledby="recommendationHeading"
   hidden
 >
-  <div class="section-heading">
+  <div class="section-heading recommendation-heading">
     <div>
       <p class="section-kicker">TODAY</p>
 
       <h2 id="recommendationHeading">
         Weather Recommendations
       </h2>
+    </div>
+
+    <button
+      id="customizeRecommendationsBtn"
+      class="secondary-btn recommendation-settings-button"
+      type="button"
+      aria-expanded="false"
+      aria-controls="recommendationSettings"
+    >
+      ⚙ Customize
+    </button>
+  </div>
+
+  <div
+    id="recommendationSettings"
+    class="recommendation-settings"
+    hidden
+  >
+    <div class="recommendation-settings-header">
+      <div>
+        <h3>Customize Recommendations</h3>
+        <p>
+          Choose which recommendations you want to see.
+        </p>
+      </div>
+
+      <button
+        id="resetRecommendationsBtn"
+        class="text-button"
+        type="button"
+      >
+        Reset
+      </button>
+    </div>
+
+    <div class="recommendation-options">
+      <label class="recommendation-option">
+        <span>Clothing</span>
+        <input
+          type="checkbox"
+          data-recommendation-preference="clothing"
+        />
+      </label>
+
+      <label class="recommendation-option">
+        <span>Umbrella</span>
+        <input
+          type="checkbox"
+          data-recommendation-preference="umbrella"
+        />
+      </label>
+
+      <label class="recommendation-option">
+        <span>UV Protection</span>
+        <input
+          type="checkbox"
+          data-recommendation-preference="uv"
+        />
+      </label>
+
+      <label class="recommendation-option">
+        <span>Hydration</span>
+        <input
+          type="checkbox"
+          data-recommendation-preference="hydration"
+        />
+      </label>
+
+      <label class="recommendation-option">
+        <span>Wind</span>
+        <input
+          type="checkbox"
+          data-recommendation-preference="wind"
+        />
+      </label>
+
+      <label class="recommendation-option">
+        <span>Outdoor Activity</span>
+        <input
+          type="checkbox"
+          data-recommendation-preference="outdoor"
+        />
+      </label>
+
+      <label class="recommendation-option">
+        <span>Air Quality</span>
+        <input
+          type="checkbox"
+          data-recommendation-preference="airQuality"
+        />
+      </label>
+
+      <label class="recommendation-option">
+        <span>Pet Walk</span>
+        <input
+          type="checkbox"
+          data-recommendation-preference="petWalk"
+        />
+      </label>
     </div>
   </div>
 

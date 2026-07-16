@@ -38,3 +38,59 @@ export function toggleFavoriteCity(cities, city) {
 
 export const loadUnit = () => localStorage.getItem(UNIT_KEY) === "imperial" ? "imperial" : "metric";
 export const saveUnit = (unit) => localStorage.setItem(UNIT_KEY, unit);
+
+/* ================= RECOMMENDATION PREFERENCES ================= */
+
+const RECOMMENDATION_PREFERENCES_KEY =
+  "weather-finder:recommendation-preferences";
+
+export const DEFAULT_RECOMMENDATION_PREFERENCES = {
+  clothing: true,
+  umbrella: true,
+  uv: true,
+  hydration: true,
+  wind: true,
+  outdoor: true,
+  airQuality: true,
+  petWalk: false,
+};
+
+export function loadRecommendationPreferences() {
+  try {
+    const savedPreferences = JSON.parse(
+      localStorage.getItem(
+        RECOMMENDATION_PREFERENCES_KEY
+      ) || "{}"
+    );
+
+    return {
+      ...DEFAULT_RECOMMENDATION_PREFERENCES,
+      ...savedPreferences,
+    };
+  } catch {
+    return {
+      ...DEFAULT_RECOMMENDATION_PREFERENCES,
+    };
+  }
+}
+
+export function saveRecommendationPreferences(
+  preferences
+) {
+  localStorage.setItem(
+    RECOMMENDATION_PREFERENCES_KEY,
+    JSON.stringify(preferences)
+  );
+}
+
+export function resetRecommendationPreferences() {
+  const defaultPreferences = {
+    ...DEFAULT_RECOMMENDATION_PREFERENCES,
+  };
+
+  saveRecommendationPreferences(
+    defaultPreferences
+  );
+
+  return defaultPreferences;
+}

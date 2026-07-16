@@ -26,6 +26,9 @@ import {
   clearRecentCities,
   loadFavoriteCities,
   loadRecentCities,
+  loadRecommendationPreferences,
+  saveRecommendationPreferences,
+  resetRecommendationPreferences,
   loadUnit,
   removeRecentCity,
   saveFavoriteCities,
@@ -107,6 +110,21 @@ const elements = {
       "recommendationGrid"
     ),
 
+    customizeRecommendationsButton:
+  document.getElementById(
+    "customizeRecommendationsBtn"
+  ),
+
+recommendationSettings:
+  document.getElementById(
+    "recommendationSettings"
+  ),
+
+resetRecommendationsButton:
+  document.getElementById(
+    "resetRecommendationsBtn"
+  ),
+
   mapSection:
     document.getElementById("mapSection"),
 
@@ -148,6 +166,8 @@ const elements = {
 let recentCities = loadRecentCities();
 let favoriteCities = loadFavoriteCities();
 let unit = loadUnit();
+let recommendationPreferences =
+  loadRecommendationPreferences();
 
 let currentDashboard = null;
 let activeRequestId = 0;
@@ -202,6 +222,51 @@ function buildWeatherShareText(weather) {
         : "Unavailable"
     }`,
   ].join("\n");
+}
+
+function syncRecommendationSettings() {
+
+  const checkboxes =
+
+    document.querySelectorAll(
+
+      "[data-recommendation-preference]"
+
+    );
+
+  checkboxes.forEach((checkbox) => {
+
+    const preferenceKey =
+
+      checkbox.dataset
+
+        .recommendationPreference;
+
+    checkbox.checked =
+
+      recommendationPreferences[
+
+        preferenceKey
+
+      ] !== false;
+
+  });
+
+}
+
+function renderCurrentRecommendations() {
+  if (!currentDashboard) {
+    return;
+  }
+
+  renderRecommendations(
+    elements.recommendationSection,
+    elements.recommendationGrid,
+    createWeatherRecommendations(
+      currentDashboard.weather
+    ),
+    recommendationPreferences
+  );
 }
 
 /* ================= FAVORITE WEATHER ================= */
@@ -365,13 +430,7 @@ function renderAllWeather() {
     unit
   );
 
-  renderRecommendations(
-    elements.recommendationSection,
-    elements.recommendationGrid,
-    createWeatherRecommendations(
-      weather
-    )
-  );
+  renderCurrentRecommendations();
 
   renderForecast(
     elements.forecastSection,
@@ -878,6 +937,72 @@ elements.shareWeatherButton
     shareCurrentWeather
   );
 
+  elements.customizeRecommendationsButton
+  ?.addEventListener(
+    "click",
+    () => {
+      const isHidden =
+        elements.recommendationSettings
+          .hidden;
+
+      elements.recommendationSettings.hidden =
+        !isHidden;
+
+      elements.customizeRecommendationsButton
+        .setAttribute(
+          "aria-expanded",
+          String(isHidden)
+        );
+    }
+  );
+
+  elements.recommendationSettings
+  ?.addEventListener(
+    "change",
+    (event) => {
+      const checkbox =
+        event.target.closest(
+          "[data-recommendation-preference]"
+        );
+
+      if (!checkbox) {
+        return;
+      }
+
+      const preferenceKey =
+        checkbox.dataset
+          .recommendationPreference;
+
+      recommendationPreferences = {
+        ...recommendationPreferences,
+        [preferenceKey]:
+          checkbox.checked,
+      };
+
+      saveRecommendationPreferences(
+        recommendationPreferences
+      );
+
+      renderCurrentRecommendations();
+    }
+  );
+
+  elements.resetRecommendationsButton
+  ?.addEventListener(
+    "click",
+    () => {
+      recommendationPreferences =
+        resetRecommendationPreferences();
+
+      syncRecommendationSettings();
+      renderCurrentRecommendations();
+
+      showSuccess(
+        elements.status,
+        "Recommendation preferences reset."
+      );
+    }
+  );
 /* ================= SAVED CITY ACTIONS ================= */
 
 function handleCityListClick(
@@ -923,6 +1048,7 @@ function handleCityListClick(
     );
 
     renderSavedCities();
+    syncRecommendationSettings();
   }
 }
 
