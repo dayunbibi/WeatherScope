@@ -1,4 +1,9 @@
-import { formatTemperature, formatWind } from "./models.js";
+import {
+  formatTemperature,
+  formatWind,
+} from "./models.js";
+
+/* ================= HELPERS ================= */
 
 function escapeHtml(value) {
   return String(value)
@@ -9,12 +14,25 @@ function escapeHtml(value) {
     .replaceAll("'", "&#039;");
 }
 
+/* ================= LOADING ================= */
+
 export function setLoading(button, isLoading) {
-  if (!button) return;
+  if (!button) {
+    return;
+  }
+
   button.disabled = isLoading;
-  button.classList.toggle("is-loading", isLoading);
-  button.setAttribute("aria-busy", String(isLoading));
+  button.classList.toggle(
+    "is-loading",
+    isLoading
+  );
+
+  button.setAttribute(
+    "aria-busy",
+    String(isLoading)
+  );
 }
+
 export function showDashboardSkeleton({
   weatherContainer,
   hourlySection,
@@ -24,7 +42,10 @@ export function showDashboardSkeleton({
   mapSection,
 }) {
   weatherContainer.innerHTML = `
-    <article class="weather-card skeleton-card" aria-hidden="true">
+    <article
+      class="weather-card skeleton-card"
+      aria-hidden="true"
+    >
       <header class="weather-card-header">
         <div class="skeleton-header-copy">
           <div class="skeleton skeleton-label"></div>
@@ -32,18 +53,30 @@ export function showDashboardSkeleton({
           <div class="skeleton skeleton-subtitle"></div>
         </div>
 
-        <div class="skeleton skeleton-weather-icon"></div>
+        <div
+          class="skeleton skeleton-weather-icon"
+        ></div>
       </header>
 
       <div class="weather-primary">
         <div>
-          <div class="skeleton skeleton-temperature"></div>
-          <div class="skeleton skeleton-condition"></div>
+          <div
+            class="skeleton skeleton-temperature"
+          ></div>
+
+          <div
+            class="skeleton skeleton-condition"
+          ></div>
         </div>
 
         <div class="skeleton-range">
-          <div class="skeleton skeleton-range-line"></div>
-          <div class="skeleton skeleton-range-line"></div>
+          <div
+            class="skeleton skeleton-range-line"
+          ></div>
+
+          <div
+            class="skeleton skeleton-range-line"
+          ></div>
         </div>
       </div>
 
@@ -51,9 +84,16 @@ export function showDashboardSkeleton({
         ${Array.from(
           { length: 8 },
           () => `
-            <div class="detail-card skeleton-detail-card">
-              <div class="skeleton skeleton-detail-label"></div>
-              <div class="skeleton skeleton-detail-value"></div>
+            <div
+              class="detail-card skeleton-detail-card"
+            >
+              <div
+                class="skeleton skeleton-detail-label"
+              ></div>
+
+              <div
+                class="skeleton skeleton-detail-value"
+              ></div>
             </div>
           `
         ).join("")}
@@ -62,31 +102,63 @@ export function showDashboardSkeleton({
   `;
 
   hourlySection.hidden = false;
+
   hourlyContainer.innerHTML = Array.from(
     { length: 6 },
     () => `
-      <article class="hourly-card skeleton-hourly-card" aria-hidden="true">
-        <div class="skeleton skeleton-hour"></div>
-        <div class="skeleton skeleton-hourly-icon"></div>
-        <div class="skeleton skeleton-hourly-temp"></div>
-        <div class="skeleton skeleton-hourly-text"></div>
+      <article
+        class="hourly-card skeleton-hourly-card"
+        aria-hidden="true"
+      >
+        <div
+          class="skeleton skeleton-hour"
+        ></div>
+
+        <div
+          class="skeleton skeleton-hourly-icon"
+        ></div>
+
+        <div
+          class="skeleton skeleton-hourly-temp"
+        ></div>
+
+        <div
+          class="skeleton skeleton-hourly-text"
+        ></div>
       </article>
     `
   ).join("");
 
   forecastSection.hidden = false;
+
   forecastContainer.innerHTML = Array.from(
     { length: 5 },
     () => `
-      <article class="forecast-card skeleton-forecast-card" aria-hidden="true">
+      <article
+        class="forecast-card skeleton-forecast-card"
+        aria-hidden="true"
+      >
         <div class="skeleton-forecast-date">
-          <div class="skeleton skeleton-forecast-day"></div>
-          <div class="skeleton skeleton-forecast-calendar"></div>
+          <div
+            class="skeleton skeleton-forecast-day"
+          ></div>
+
+          <div
+            class="skeleton skeleton-forecast-calendar"
+          ></div>
         </div>
 
-        <div class="skeleton skeleton-forecast-icon"></div>
-        <div class="skeleton skeleton-forecast-description"></div>
-        <div class="skeleton skeleton-forecast-temperature"></div>
+        <div
+          class="skeleton skeleton-forecast-icon"
+        ></div>
+
+        <div
+          class="skeleton skeleton-forecast-description"
+        ></div>
+
+        <div
+          class="skeleton skeleton-forecast-temperature"
+        ></div>
       </article>
     `
   ).join("");
@@ -95,12 +167,22 @@ export function showDashboardSkeleton({
     mapSection.hidden = true;
   }
 
-  weatherContainer.setAttribute("aria-busy", "true");
+  weatherContainer.setAttribute(
+    "aria-busy",
+    "true"
+  );
 }
 
-export function hideDashboardSkeleton(weatherContainer) {
-  weatherContainer.removeAttribute("aria-busy");
+export function hideDashboardSkeleton(
+  weatherContainer
+) {
+  weatherContainer.removeAttribute(
+    "aria-busy"
+  );
 }
+
+/* ================= STATUS ================= */
+
 export function clearStatus(element) {
   element.textContent = "";
   element.className = "status";
@@ -116,90 +198,349 @@ export function showSuccess(element, message) {
   element.className = "status success";
 }
 
-export function renderWeather(container, weather, unit, isFavorite) {
+/* ================= CURRENT WEATHER ================= */
+
+export function renderWeather(
+  container,
+  weather,
+  unit,
+  isFavorite
+) {
   container.innerHTML = `
     <article class="weather-card">
       <header class="weather-card-header">
         <div>
-          <p class="location-label">Current conditions</p>
+          <p class="location-label">
+            Current conditions
+          </p>
+
           <div class="city-title-row">
-            <h2 class="city-name">${escapeHtml(weather.locationName)}</h2>
-            <button id="favoriteCurrentBtn" class="favorite-current-btn ${isFavorite ? "active" : ""}" type="button" aria-label="${isFavorite ? "Remove from" : "Add to"} favourites" title="Toggle favourite">${isFavorite ? "★" : "☆"}</button>
+            <h2 class="city-name">
+              ${escapeHtml(weather.locationName)}
+            </h2>
+
+            <button
+              id="favoriteCurrentBtn"
+              class="favorite-current-btn ${
+                isFavorite ? "active" : ""
+              }"
+              type="button"
+              aria-label="${
+                isFavorite
+                  ? "Remove from favourites"
+                  : "Add to favourites"
+              }"
+              title="Toggle favourite"
+            >
+              ${isFavorite ? "★" : "☆"}
+            </button>
           </div>
-          <p class="local-time">${escapeHtml(weather.formatLocalDateTime())}</p>
+
+          <p class="local-time">
+            ${escapeHtml(
+              weather.formatLocalDateTime()
+            )}
+          </p>
         </div>
-        ${weather.iconUrl ? `<img class="weather-icon" src="${escapeHtml(weather.iconUrl)}" alt="${escapeHtml(weather.description)}">` : ""}
+
+        ${
+          weather.iconUrl
+            ? `
+              <img
+                class="weather-icon"
+                src="${escapeHtml(
+                  weather.iconUrl
+                )}"
+                alt="${escapeHtml(
+                  weather.description
+                )}"
+              >
+            `
+            : ""
+        }
       </header>
 
       <div class="weather-primary">
         <div>
-          <p class="temperature">${formatTemperature(weather.temperature, unit)}</p>
-          <p class="condition">${escapeHtml(weather.description)}</p>
+          <p class="temperature">
+            ${formatTemperature(
+              weather.temperature,
+              unit
+            )}
+          </p>
+
+          <p class="condition">
+            ${escapeHtml(
+              weather.description
+            )}
+          </p>
         </div>
+
         <div class="temp-range">
-          <p>High: <strong>${formatTemperature(weather.maximumTemperature, unit)}</strong></p>
-          <p>Low: <strong>${formatTemperature(weather.minimumTemperature, unit)}</strong></p>
+          <p>
+            High:
+            <strong>
+              ${formatTemperature(
+                weather.maximumTemperature,
+                unit
+              )}
+            </strong>
+          </p>
+
+          <p>
+            Low:
+            <strong>
+              ${formatTemperature(
+                weather.minimumTemperature,
+                unit
+              )}
+            </strong>
+          </p>
         </div>
       </div>
 
       <dl class="weather-details">
-        <div class="detail-card"><dt>Feels like</dt><dd>${formatTemperature(weather.feelsLike, unit)}</dd></div>
-        <div class="detail-card"><dt>Humidity</dt><dd>${Math.round(weather.humidity)}%</dd></div>
-        <div class="detail-card"><dt>Wind</dt><dd>${formatWind(weather.windSpeed, unit)}</dd></div>
-        <div class="detail-card"><dt>Pressure</dt><dd>${Math.round(weather.pressure)} hPa</dd></div>
-<div class="detail-card aqi-card aqi-${escapeHtml(weather.aqiClass)}">
-  <div class="detail-card-heading">
-    <dt>Air quality</dt>
+        <div class="detail-card">
+          <dt>Feels like</dt>
 
-    <span class="aqi-status">
-      ${escapeHtml(weather.aqiLabel)}
-    </span>
-  </div>
+          <dd>
+            ${formatTemperature(
+              weather.feelsLike,
+              unit
+            )}
+          </dd>
+        </div>
 
-  <dd class="aqi-value">
-    ${weather.aqi !== null ? `${weather.aqi}/5` : "Unavailable"}
-  </dd>
+        <div class="detail-card">
+          <dt>Humidity</dt>
 
-  <small class="aqi-pm25">
-    ${
-      weather.pm25 !== null
-        ? `PM2.5 ${escapeHtml(weather.formattedPm25)}`
-        : "PM2.5 unavailable"
-    }
-  </small>
-</div>        <div class="detail-card accent-card"><dt>UV index</dt><dd>${weather.uvIndex !== null ? `${weather.uvIndex.toFixed(1)} · ${weather.uvLabel}` : "Unavailable"}</dd></div>
-        <div class="detail-card"><dt>Sunrise</dt><dd>${escapeHtml(weather.formatCityTime(weather.sunriseTimestamp))}</dd></div>
-        <div class="detail-card"><dt>Sunset</dt><dd>${escapeHtml(weather.formatCityTime(weather.sunsetTimestamp))}</dd></div>
+          <dd>
+            ${Math.round(weather.humidity)}%
+          </dd>
+        </div>
+
+        <div class="detail-card">
+          <dt>Wind</dt>
+
+          <dd>
+            ${formatWind(
+              weather.windSpeed,
+              unit
+            )}
+          </dd>
+        </div>
+
+        <div class="detail-card">
+          <dt>Pressure</dt>
+
+          <dd>
+            ${Math.round(
+              weather.pressure
+            )} hPa
+          </dd>
+        </div>
+
+        <div
+          class="detail-card aqi-card aqi-${escapeHtml(
+            weather.aqiClass
+          )}"
+        >
+          <div class="detail-card-heading">
+            <dt>Air quality</dt>
+
+            <span class="aqi-status">
+              ${escapeHtml(
+                weather.aqiLabel
+              )}
+            </span>
+          </div>
+
+          <dd class="aqi-value">
+            ${
+              weather.aqi !== null
+                ? `${weather.aqi}/5`
+                : "Unavailable"
+            }
+          </dd>
+
+          <small class="aqi-pm25">
+            ${
+              weather.pm25 !== null
+                ? `PM2.5 ${escapeHtml(
+                    weather.formattedPm25
+                  )}`
+                : "PM2.5 unavailable"
+            }
+          </small>
+        </div>
+
+        <div class="detail-card">
+          <dt>UV index</dt>
+
+          <dd>
+            ${
+              weather.uvIndex !== null
+                ? `${weather.uvIndex.toFixed(
+                    1
+                  )} · ${escapeHtml(
+                    weather.uvLabel
+                  )}`
+                : "Unavailable"
+            }
+          </dd>
+        </div>
+
+        <div class="detail-card">
+          <dt>Sunrise</dt>
+
+          <dd>
+            ${escapeHtml(
+              weather.sunriseTime
+            )}
+          </dd>
+        </div>
+
+        <div class="detail-card">
+          <dt>Sunset</dt>
+
+          <dd>
+            ${escapeHtml(
+              weather.sunsetTime
+            )}
+          </dd>
+        </div>
       </dl>
-    </article>`;
+    </article>
+  `;
 }
 
-export function renderHourly(section, container, items, unit) {
-  container.innerHTML = items.map((item) => `
-    <article class="hourly-card">
-      <p class="hourly-time">${escapeHtml(item.time)}</p>
-      ${item.iconUrl ? `<img src="${escapeHtml(item.iconUrl)}" alt="${escapeHtml(item.description)}">` : ""}
-      <strong>${formatTemperature(item.temperature, unit)}</strong>
-      <span>${escapeHtml(item.description)}</span>
-    </article>`).join("");
+/* ================= HOURLY FORECAST ================= */
+
+export function renderHourly(
+  section,
+  container,
+  items,
+  unit
+) {
+  container.innerHTML = items
+    .map(
+      (item) => `
+        <article class="hourly-card">
+          <p class="hourly-time">
+            ${escapeHtml(item.time)}
+          </p>
+
+          ${
+            item.iconUrl
+              ? `
+                <img
+                  src="${escapeHtml(
+                    item.iconUrl
+                  )}"
+                  alt="${escapeHtml(
+                    item.description
+                  )}"
+                >
+              `
+              : ""
+          }
+
+          <strong>
+            ${formatTemperature(
+              item.temperature,
+              unit
+            )}
+          </strong>
+
+          <span>
+            ${escapeHtml(
+              item.description
+            )}
+          </span>
+        </article>
+      `
+    )
+    .join("");
+
   section.hidden = items.length === 0;
 }
 
-export function renderForecast(section, container, items, unit) {
-  container.innerHTML = items.map((item) => `
-    <article class="forecast-card">
-      <div class="forecast-date"><p class="forecast-day">${item.day}</p><p class="forecast-calendar-date">${item.date}</p></div>
-      ${item.iconUrl ? `<img class="forecast-icon" src="${escapeHtml(item.iconUrl)}" alt="${escapeHtml(item.description)}">` : ""}
-      <p class="forecast-description">${escapeHtml(item.description)}</p>
-      <p class="forecast-temperatures"><strong>${formatTemperature(item.maximumTemperature, unit)}</strong><span>${formatTemperature(item.minimumTemperature, unit)}</span></p>
-    </article>`).join("");
+/* ================= FIVE-DAY FORECAST ================= */
+
+export function renderForecast(
+  section,
+  container,
+  items,
+  unit
+) {
+  container.innerHTML = items
+    .map(
+      (item) => `
+        <article class="forecast-card">
+          <div class="forecast-date">
+            <p class="forecast-day">
+              ${escapeHtml(item.day)}
+            </p>
+
+            <p class="forecast-calendar-date">
+              ${escapeHtml(item.date)}
+            </p>
+          </div>
+
+          ${
+            item.iconUrl
+              ? `
+                <img
+                  class="forecast-icon"
+                  src="${escapeHtml(
+                    item.iconUrl
+                  )}"
+                  alt="${escapeHtml(
+                    item.description
+                  )}"
+                >
+              `
+              : ""
+          }
+
+          <p class="forecast-description">
+            ${escapeHtml(
+              item.description
+            )}
+          </p>
+
+          <p class="forecast-temperatures">
+            <strong>
+              ${formatTemperature(
+                item.maximumTemperature,
+                unit
+              )}
+            </strong>
+
+            <span>
+              ${formatTemperature(
+                item.minimumTemperature,
+                unit
+              )}
+            </span>
+          </p>
+        </article>
+      `
+    )
+    .join("");
+
   section.hidden = items.length === 0;
 }
 
 export function clearForecast(...pairs) {
-  for (let index = 0; index < pairs.length; index += 2) {
+  for (
+    let index = 0;
+    index < pairs.length;
+    index += 2
+  ) {
     const section = pairs[index];
     const container = pairs[index + 1];
+
     if (section && container) {
       container.innerHTML = "";
       section.hidden = true;
@@ -207,45 +548,150 @@ export function clearForecast(...pairs) {
   }
 }
 
-function renderCityPills(listElement, cities, removable, emptyElement) {
+/* ================= SAVED CITIES ================= */
+
+function renderCityPills(
+  listElement,
+  cities,
+  removable,
+  emptyElement
+) {
   listElement.innerHTML = "";
-  emptyElement.hidden = cities.length > 0;
+  emptyElement.hidden =
+    cities.length > 0;
 
   cities.forEach((city) => {
-    const item = document.createElement("li");
+    const item =
+      document.createElement("li");
+
     item.className = "recent-item";
-    item.innerHTML = `<button type="button" class="recent-city-button" data-action="search" data-city="${escapeHtml(city)}">${escapeHtml(city)}</button>${removable ? `<button type="button" class="remove-city-button" data-action="remove" data-city="${escapeHtml(city)}" aria-label="Remove ${escapeHtml(city)}">×</button>` : ""}`;
+
+    item.innerHTML = `
+      <button
+        type="button"
+        class="recent-city-button"
+        data-action="search"
+        data-city="${escapeHtml(city)}"
+      >
+        ${escapeHtml(city)}
+      </button>
+
+      ${
+        removable
+          ? `
+            <button
+              type="button"
+              class="remove-city-button"
+              data-action="remove"
+              data-city="${escapeHtml(city)}"
+              aria-label="Remove ${escapeHtml(
+                city
+              )}"
+            >
+              ×
+            </button>
+          `
+          : ""
+      }
+    `;
+
     listElement.appendChild(item);
   });
 }
 
-export function renderRecentCities({ listElement, emptyElement, clearButton, cities }) {
-  renderCityPills(listElement, cities, true, emptyElement);
-  clearButton.hidden = cities.length === 0;
+export function renderRecentCities({
+  listElement,
+  emptyElement,
+  clearButton,
+  cities,
+}) {
+  renderCityPills(
+    listElement,
+    cities,
+    true,
+    emptyElement
+  );
+
+  clearButton.hidden =
+    cities.length === 0;
 }
 
-export function renderFavoriteCities({ listElement, emptyElement, cities }) {
-  renderCityPills(listElement, cities, false, emptyElement);
+export function renderFavoriteCities({
+  listElement,
+  emptyElement,
+  cities,
+}) {
+  renderCityPills(
+    listElement,
+    cities,
+    false,
+    emptyElement
+  );
 }
 
-export function updateUnitButtons(metricButton, imperialButton, unit) {
-  metricButton.classList.toggle("active", unit === "metric");
-  imperialButton.classList.toggle("active", unit === "imperial");
-  metricButton.setAttribute("aria-pressed", String(unit === "metric"));
-  imperialButton.setAttribute("aria-pressed", String(unit === "imperial"));
+/* ================= UNIT BUTTONS ================= */
+
+export function updateUnitButtons(
+  metricButton,
+  imperialButton,
+  unit
+) {
+  metricButton.classList.toggle(
+    "active",
+    unit === "metric"
+  );
+
+  imperialButton.classList.toggle(
+    "active",
+    unit === "imperial"
+  );
+
+  metricButton.setAttribute(
+    "aria-pressed",
+    String(unit === "metric")
+  );
+
+  imperialButton.setAttribute(
+    "aria-pressed",
+    String(unit === "imperial")
+  );
 }
+
+/* ================= APP THEME ================= */
 
 export function applyTheme(theme) {
-  document.documentElement.dataset.theme = theme;
-  const button = document.getElementById("themeBtn");
+  document.documentElement.dataset.theme =
+    theme;
+
+  const button =
+    document.getElementById("themeBtn");
+
   if (button) {
-    button.textContent = theme === "dark" ? "☀️ Light" : "🌙 Dark";
-    button.setAttribute("aria-label", `Switch to ${theme === "dark" ? "light" : "dark"} mode`);
+    button.textContent =
+      theme === "dark"
+        ? "☀️ Light"
+        : "🌙 Dark";
+
+    button.setAttribute(
+      "aria-label",
+      `Switch to ${
+        theme === "dark"
+          ? "light"
+          : "dark"
+      } mode`
+    );
   }
 }
-export function applyWeatherTheme(weather) {
+
+/* ================= WEATHER BACKGROUND ================= */
+
+export function applyWeatherTheme(
+  weather
+) {
   if (!weather) {
-    document.body.dataset.weather = "default";
+    document.body.dataset.weather =
+      "default";
+
     return;
   }
 
@@ -277,7 +723,9 @@ export function applyWeatherTheme(weather) {
     condition.includes("drizzle")
   ) {
     weatherTheme = "rain";
-  } else if (condition.includes("snow")) {
+  } else if (
+    condition.includes("snow")
+  ) {
     weatherTheme = "snow";
   } else if (
     condition.includes("cloud") ||
@@ -296,15 +744,21 @@ export function applyWeatherTheme(weather) {
     weatherTheme = "night";
   }
 
-  document.body.dataset.weather = weatherTheme;
+  document.body.dataset.weather =
+    weatherTheme;
 
-  console.log("Applied weather background:", {
-    condition,
-    iconCode,
-    isNight,
-    weatherTheme,
-  });
+  console.log(
+    "Applied weather background:",
+    {
+      condition,
+      iconCode,
+      isNight,
+      weatherTheme,
+    }
+  );
 }
+
+/* ================= TODAY'S HIGHLIGHTS ================= */
 
 export function renderHighlights({
   section,
@@ -312,89 +766,188 @@ export function renderHighlights({
   weather,
   unit,
 }) {
-  if (!section || !container || !weather) {
+  if (
+    !section ||
+    !container ||
+    !weather
+  ) {
     return;
   }
 
   container.innerHTML = `
     <article class="highlight-card">
-      <span class="highlight-icon" aria-hidden="true">🌡️</span>
-      <p class="highlight-label">Feels Like</p>
+      <span
+        class="highlight-icon"
+        aria-hidden="true"
+      >
+        🌡️
+      </span>
+
+      <p class="highlight-label">
+        Feels Like
+      </p>
+
       <strong class="highlight-value">
-        ${formatTemperature(weather.feelsLike, unit)}
+        ${formatTemperature(
+          weather.feelsLike,
+          unit
+        )}
       </strong>
     </article>
 
     <article class="highlight-card">
-      <span class="highlight-icon" aria-hidden="true">💧</span>
-      <p class="highlight-label">Humidity</p>
+      <span
+        class="highlight-icon"
+        aria-hidden="true"
+      >
+        💧
+      </span>
+
+      <p class="highlight-label">
+        Humidity
+      </p>
+
       <strong class="highlight-value">
         ${Math.round(weather.humidity)}%
       </strong>
     </article>
 
     <article class="highlight-card">
-      <span class="highlight-icon" aria-hidden="true">💨</span>
-      <p class="highlight-label">Wind</p>
+      <span
+        class="highlight-icon"
+        aria-hidden="true"
+      >
+        💨
+      </span>
+
+      <p class="highlight-label">
+        Wind
+      </p>
+
       <strong class="highlight-value">
-        ${formatWind(weather.windSpeed, unit)}
+        ${formatWind(
+          weather.windSpeed,
+          unit
+        )}
       </strong>
     </article>
 
     <article class="highlight-card">
-      <span class="highlight-icon" aria-hidden="true">🧭</span>
-      <p class="highlight-label">Pressure</p>
+      <span
+        class="highlight-icon"
+        aria-hidden="true"
+      >
+        🧭
+      </span>
+
+      <p class="highlight-label">
+        Pressure
+      </p>
+
       <strong class="highlight-value">
-        ${Math.round(weather.pressure)} hPa
+        ${Math.round(
+          weather.pressure
+        )} hPa
       </strong>
     </article>
 
-    <article class="highlight-card aqi-highlight aqi-${escapeHtml(
-      weather.aqiClass
-    )}">
-      <span class="highlight-icon" aria-hidden="true">🌿</span>
-      <p class="highlight-label">Air Quality</p>
+    <article
+      class="highlight-card aqi-highlight aqi-${escapeHtml(
+        weather.aqiClass
+      )}"
+    >
+      <span
+        class="highlight-icon"
+        aria-hidden="true"
+      >
+        🌿
+      </span>
+
+      <p class="highlight-label">
+        Air Quality
+      </p>
+
       <strong class="highlight-value">
         ${
           weather.aqi !== null
-            ? `${weather.aqi}/5 · ${escapeHtml(weather.aqiLabel)}`
+            ? `${weather.aqi}/5 · ${escapeHtml(
+                weather.aqiLabel
+              )}`
             : "Unavailable"
         }
       </strong>
+
       <small class="highlight-meta">
         ${
           weather.pm25 !== null
-            ? `PM2.5 ${escapeHtml(weather.formattedPm25)}`
+            ? `PM2.5 ${escapeHtml(
+                weather.formattedPm25
+              )}`
             : "PM2.5 unavailable"
         }
       </small>
     </article>
 
     <article class="highlight-card">
-      <span class="highlight-icon" aria-hidden="true">☀️</span>
-      <p class="highlight-label">UV Index</p>
+      <span
+        class="highlight-icon"
+        aria-hidden="true"
+      >
+        ☀️
+      </span>
+
+      <p class="highlight-label">
+        UV Index
+      </p>
+
       <strong class="highlight-value">
         ${
           weather.uvIndex !== null
-            ? `${weather.uvIndex.toFixed(1)} · ${escapeHtml(weather.uvLabel)}`
+            ? `${weather.uvIndex.toFixed(
+                1
+              )} · ${escapeHtml(
+                weather.uvLabel
+              )}`
             : "Unavailable"
         }
       </strong>
     </article>
 
     <article class="highlight-card">
-      <span class="highlight-icon" aria-hidden="true">🌅</span>
-      <p class="highlight-label">Sunrise</p>
+      <span
+        class="highlight-icon"
+        aria-hidden="true"
+      >
+        🌅
+      </span>
+
+      <p class="highlight-label">
+        Sunrise
+      </p>
+
       <strong class="highlight-value">
-        ${escapeHtml(weather.sunriseTime)}
+        ${escapeHtml(
+          weather.sunriseTime
+        )}
       </strong>
     </article>
 
     <article class="highlight-card">
-      <span class="highlight-icon" aria-hidden="true">🌇</span>
-      <p class="highlight-label">Sunset</p>
+      <span
+        class="highlight-icon"
+        aria-hidden="true"
+      >
+        🌇
+      </span>
+
+      <p class="highlight-label">
+        Sunset
+      </p>
+
       <strong class="highlight-value">
-        ${escapeHtml(weather.sunsetTime)}
+        ${escapeHtml(
+          weather.sunsetTime
+        )}
       </strong>
     </article>
   `;
@@ -402,7 +955,10 @@ export function renderHighlights({
   section.hidden = false;
 }
 
-export function clearHighlights(section, container) {
+export function clearHighlights(
+  section,
+  container
+) {
   if (!section || !container) {
     return;
   }
