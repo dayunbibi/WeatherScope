@@ -555,15 +555,13 @@ export function clearForecast(...pairs) {
 
 /* ================= SAVED CITIES ================= */
 
-function renderCityPills(
+function renderRecentCityPills(
   listElement,
   cities,
-  removable,
   emptyElement
 ) {
   listElement.innerHTML = "";
-  emptyElement.hidden =
-    cities.length > 0;
+  emptyElement.hidden = cities.length > 0;
 
   cities.forEach((city) => {
     const item =
@@ -581,23 +579,60 @@ function renderCityPills(
         ${escapeHtml(city)}
       </button>
 
-      ${
-        removable
-          ? `
-            <button
-              type="button"
-              class="remove-city-button"
-              data-action="remove"
-              data-city="${escapeHtml(city)}"
-              aria-label="Remove ${escapeHtml(
-                city
-              )}"
-            >
-              ×
-            </button>
-          `
-          : ""
-      }
+      <button
+        type="button"
+        class="remove-city-button"
+        data-action="remove"
+        data-city="${escapeHtml(city)}"
+        aria-label="Remove ${escapeHtml(city)}"
+      >
+        ×
+      </button>
+    `;
+
+    listElement.appendChild(item);
+  });
+}
+
+function renderFavoriteWeatherCards(
+  listElement,
+  cities,
+  emptyElement
+) {
+  listElement.innerHTML = "";
+  emptyElement.hidden = cities.length > 0;
+
+  cities.forEach((city) => {
+    const item =
+      document.createElement("li");
+
+    item.className =
+      "favorite-weather-card";
+
+    item.innerHTML = `
+      <button
+        type="button"
+        class="favorite-card-button"
+        data-action="search"
+        data-city="${escapeHtml(city)}"
+      >
+        <div
+          class="favorite-card-icon"
+          aria-hidden="true"
+        >
+          🌤️
+        </div>
+
+        <div class="favorite-card-info">
+          <strong>
+            ${escapeHtml(city)}
+          </strong>
+
+          <span>
+            Loading...
+          </span>
+        </div>
+      </button>
     `;
 
     listElement.appendChild(item);
@@ -610,10 +645,17 @@ export function renderRecentCities({
   clearButton,
   cities,
 }) {
-  renderCityPills(
+  if (
+    !listElement ||
+    !emptyElement ||
+    !clearButton
+  ) {
+    return;
+  }
+
+  renderRecentCityPills(
     listElement,
     cities,
-    true,
     emptyElement
   );
 
@@ -626,10 +668,16 @@ export function renderFavoriteCities({
   emptyElement,
   cities,
 }) {
-  renderCityPills(
+  if (
+    !listElement ||
+    !emptyElement
+  ) {
+    return;
+  }
+
+  renderFavoriteWeatherCards(
     listElement,
     cities,
-    false,
     emptyElement
   );
 }
@@ -969,5 +1017,47 @@ export function clearHighlights(
   }
 
   container.replaceChildren();
+  section.hidden = true;
+}
+
+export function renderRecommendations(
+  section,
+  container,
+  recommendations
+) {
+  if (!section || !container) return;
+
+  if (!recommendations.length) {
+    section.hidden = true;
+    return;
+  }
+
+  container.innerHTML = recommendations
+    .map(
+      (item) => `
+      <article class="recommendation-card">
+        <div class="recommendation-icon">
+          ${item.icon}
+        </div>
+
+        <div class="recommendation-content">
+          <h3>${item.title}</h3>
+          <p>${item.text}</p>
+        </div>
+      </article>
+    `
+    )
+    .join("");
+
+  section.hidden = false;
+}
+
+export function clearRecommendations(
+  section,
+  container
+) {
+  if (!section || !container) return;
+
+  container.innerHTML = "";
   section.hidden = true;
 }
