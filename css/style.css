@@ -1724,3 +1724,45 @@ html[data-theme="dark"] .highlight-card {
 --aqi-soft:#ffe3e3;
 
 }
+
+/* ================= FAVORITE CITY PILLS ================= */
+
+.favorite-list,
+#favoriteList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+#favoriteList .recent-item {
+  display: inline-flex;
+  align-items: center;
+  overflow: hidden;
+
+  background: var(--primary-soft);
+  border: 1px solid color-mix(
+    in srgb,
+    var(--primary) 18%,
+    var(--border)
+  );
+  border-radius: 999px;
+}
+
+#favoriteList .recent-city-button {
+  padding: 0.55rem 1rem;
+  color: #24428c;
+  background: transparent;
+  border: 0;
+  font-weight: 750;
+  white-space: nowrap;
+}
+
+#favoriteList .recent-city-button:hover {
+  background: rgba(53, 103, 233, 0.1);
+}
+
+@media (prefers-color-scheme: dark) {
+  #favoriteList .recent-city-button {
+    color: #dbe6ff;
+  }
+}
