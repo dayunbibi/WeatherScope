@@ -1844,6 +1844,7 @@ html[data-theme="dark"] .highlight-card {
   }
 }
 
+
 @media (max-width: 520px) {
   .weather-card-header {
     align-items: center;
@@ -1862,4 +1863,57 @@ html[data-theme="dark"] .highlight-card {
     width: 76px;
     height: 76px;
   }
+}
+
+/* ================= WEATHER CONDITION LABEL ================= */
+
+.condition-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin-top: 0.7rem;
+}
+
+.condition {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 1rem;
+  text-transform: capitalize;
+}
+
+.condition-dot {
+  flex: 0 0 auto;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 4px rgba(148, 163, 184, 0.14);
+}
+
+.condition-clear {
+  background: #f3b61f;
+  box-shadow: 0 0 0 4px rgba(243, 182, 31, 0.16);
+}
+
+.condition-clouds {
+  background: #8a98aa;
+  box-shadow: 0 0 0 4px rgba(138, 152, 170, 0.16);
+}
+
+.condition-rain {
+  background: #4f7ea8;
+  box-shadow: 0 0 0 4px rgba(79, 126, 168, 0.16);
+}
+
+.condition-snow {
+  background: #9fd4ef;
+  box-shadow: 0 0 0 4px rgba(159, 212, 239, 0.18);
+}
+
+.condition-night {
+  background: #586a9e;
+  box-shadow: 0 0 0 4px rgba(88, 106, 158, 0.18);
+}
+
+.condition-default {
+  background: #94a3b8;
 }

@@ -269,11 +269,16 @@ export function renderWeather(
             )}
           </p>
 
-          <p class="condition">
-            ${escapeHtml(
-              weather.description
-            )}
-          </p>
+          <div class="condition-row">
+  <span
+    class="condition-dot condition-${document.body.dataset.weather || "default"}"
+    aria-hidden="true"
+  ></span>
+
+  <p class="condition">
+    ${escapeHtml(weather.description)}
+  </p>
+</div>
         </div>
 
         <div class="temp-range">
