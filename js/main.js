@@ -24,12 +24,10 @@ import {
   clearRecentCities,
   loadFavoriteCities,
   loadRecentCities,
-  loadTheme,
   loadUnit,
   removeRecentCity,
   saveFavoriteCities,
   saveRecentCities,
-  saveTheme,
   saveUnit,
   toggleFavoriteCity,
 } from "./storage.js";
@@ -70,9 +68,6 @@ const elements = {
     document.getElementById("metricBtn"),
   imperialButton:
     document.getElementById("imperialBtn"),
-
-  themeButton:
-    document.getElementById("themeBtn"),
   shareWeatherButton:
     document.getElementById("shareWeatherBtn"),
   installAppButton:
@@ -121,7 +116,6 @@ const elements = {
 let recentCities = loadRecentCities();
 let favoriteCities = loadFavoriteCities();
 let unit = loadUnit();
-let theme = loadTheme();
 
 let currentDashboard = null;
 let activeRequestId = 0;
@@ -582,23 +576,7 @@ elements.imperialButton.addEventListener(
   }
 );
 
-/* ================= THEME ================= */
 
-elements.themeButton.addEventListener(
-  "click",
-  () => {
-    theme =
-      document
-        .documentElement
-        .dataset
-        .theme === "dark"
-        ? "light"
-        : "dark";
-
-    saveTheme(theme);
-    applyTheme(theme);
-  }
-);
 
 /* ================= SHARE WEATHER ================= */
 
@@ -802,18 +780,7 @@ elements.weatherResult.addEventListener(
 
 /* ================= INITIAL SETTINGS ================= */
 
-if (
-  theme === "system"
-) {
-  theme =
-    window.matchMedia(
-      "(prefers-color-scheme: dark)"
-    ).matches
-      ? "dark"
-      : "light";
-}
 
-applyTheme(theme);
 
 updateUnitButtons(
   elements.metricButton,

@@ -38,5 +38,3 @@ export function toggleFavoriteCity(cities, city) {
 
 export const loadUnit = () => localStorage.getItem(UNIT_KEY) === "imperial" ? "imperial" : "metric";
 export const saveUnit = (unit) => localStorage.setItem(UNIT_KEY, unit);
-export const loadTheme = () => localStorage.getItem(THEME_KEY) || "system";
-export const saveTheme = (theme) => localStorage.setItem(THEME_KEY, theme);
