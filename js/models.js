@@ -725,32 +725,80 @@ export function createWeatherRecommendations(weather) {
     });
   }
 
-  /* ================= PET WALK ================= */
+   /* ================= PET WALK ================= */
 
-  if (
+  const petWalkUnsafe =
+
     isStormy ||
+
+    isSnowy ||
+
     feelsLike <= -5 ||
+
     feelsLike >= 32 ||
-    aqi >= 4
-  ) {
-    recommendations.push({
-      icon: "🐾",
-      title: "Pet Walk",
-      text:
-        "Keep pet walks short and avoid the most uncomfortable conditions.",
-    });
-  } else if (
+
+    windSpeed >= 15 ||
+
+    (aqi !== null && aqi >= 4);
+
+  const petWalkIdeal =
+
     feelsLike >= 10 &&
+
     feelsLike <= 27 &&
-    !isRainy
-  ) {
-    recommendations.push({
-      icon: "🐕",
-      title: "Pet Walk",
-      text:
-        "Conditions appear suitable for a normal pet walk.",
-    });
+
+    !isRainy &&
+
+    !isSnowy &&
+
+    !isStormy &&
+
+    windSpeed < 10 &&
+
+    (aqi === null || aqi <= 2);
+
+  let petWalkIcon = "🐾";
+
+  let petWalkText =
+
+    "A shorter walk may be more comfortable. Check temperature, wind, and pavement conditions.";
+
+  if (petWalkUnsafe) {
+
+    petWalkIcon = "⚠️";
+
+    petWalkText =
+
+      "Keep walks short and avoid prolonged outdoor exposure in these conditions.";
+
+  } else if (petWalkIdeal) {
+
+    petWalkIcon = "🐕";
+
+    petWalkText =
+
+      "Conditions appear suitable for a normal pet walk.";
+
+  } else if (isRainy) {
+
+    petWalkIcon = "🌧️";
+
+    petWalkText =
+
+      "A shorter walk with rain protection may be more comfortable.";
+
   }
 
+  recommendations.push({
+
+    icon: petWalkIcon,
+
+    title: "Pet Walk",
+
+    text: petWalkText,
+
+  });
+
   return recommendations;
+
 }

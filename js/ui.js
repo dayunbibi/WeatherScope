@@ -1090,10 +1090,18 @@ export function renderRecommendations(
     });
 
   if (visibleRecommendations.length === 0) {
-    container.replaceChildren();
-    section.hidden = true;
-    return;
-  }
+  container.innerHTML = `
+    <div class="recommendation-empty-state">
+      <p>No recommendation categories are selected.</p>
+      <small>
+        Use Customize to turn recommendations back on.
+      </small>
+    </div>
+  `;
+
+  section.hidden = false;
+  return;
+}
 
   container.innerHTML = visibleRecommendations
     .map(

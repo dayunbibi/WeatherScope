@@ -2121,3 +2121,27 @@ margin-left:12px;
 .favorite-card-info span {
   text-transform: capitalize;
 }
+
+/* ================= RECOMMENDATION EMPTY STATE ================= */
+
+.recommendation-empty-state {
+  grid-column: 1 / -1;
+  padding: 24px;
+  text-align: center;
+  color: var(--text-muted);
+  background: var(--surface-strong);
+  border: 1px dashed var(--border);
+  border-radius: 18px;
+}
+
+.recommendation-empty-state p {
+  margin: 0;
+  color: var(--text);
+  font-weight: 750;
+}
+
+.recommendation-empty-state small {
+  display: block;
+  margin-top: 6px;
+  line-height: 1.5;
+}
