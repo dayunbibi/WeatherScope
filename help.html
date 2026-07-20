@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="description" content="WeatherScope Help Center — guides, FAQs, troubleshooting, and support." />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#3567e9" />
+  <title>Help & Support | WeatherScope</title>
+  <link rel="icon" type="image/jpeg" href="/images/favicon.jpeg" />
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: { extend: {
+        colors: {
+          primary: "#3567e9", "primary-container": "#3567e9", "on-primary": "#ffffff",
+          background: "#f9f9ff", surface: "#f9f9ff", "surface-container-low": "#f1f3ff",
+          "surface-container": "#e9edff", "surface-container-high": "#e1e8ff",
+          "surface-container-highest": "#d9e2fc", "on-surface": "#121b2e",
+          "on-surface-variant": "#434654", outline: "#737686", "outline-variant": "#c3c5d7",
+          "on-primary-container": "#f6f5ff", error: "#ba1a1a"
+        },
+        fontFamily: { inter: ["Inter", "sans-serif"] },
+        boxShadow: { card: "0 8px 28px rgba(31,38,135,.06)", floating: "0 18px 50px rgba(31,38,135,.14)" }
+      }}
+    };
+  </script>
+  <link rel="stylesheet" href="/css/style.css" />
+  <style>
+    body{margin:0;min-height:100vh;font-family:Inter,sans-serif}
+    [hidden]{display:none!important}.material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24}
+    .sidebar-link.active{color:#3567e9;background:rgba(53,103,233,.1);position:relative}
+    .sidebar-link.active:before{content:"";position:absolute;left:0;top:10px;bottom:10px;width:3px;border-radius:4px;background:#3567e9}
+    .glass{background:rgba(255,255,255,.72);border:1px solid rgba(255,255,255,.72);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+    .help-card{transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease}.help-card:hover{transform:translateY(-3px);box-shadow:0 18px 42px rgba(31,38,135,.11);border-color:rgba(53,103,233,.18)}
+    .faq-answer{display:grid;grid-template-rows:0fr;transition:grid-template-rows .25s ease}.faq-item.open .faq-answer{grid-template-rows:1fr}.faq-answer>div{overflow:hidden}.faq-item.open .faq-chevron{transform:rotate(180deg)}
+    .search-mark{background:#ffdea3;border-radius:3px;padding:0 2px}.fade-up{animation:fadeUp .45s ease both}@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+    html.dark body{background:#111827;color:#edf0ff}html.dark .dark-surface{background:#171f32!important}html.dark .dark-card{background:rgba(39,48,68,.78)!important;border-color:rgba(255,255,255,.08)!important}html.dark .dark-muted{color:#c3c5d7!important}html.dark .dark-input{background:#273044!important;color:#fff!important}
+    @media(max-width:767px){.mobile-safe-bottom{padding-bottom:calc(92px + env(safe-area-inset-bottom))}}
+  </style>
+</head>
+<body class="min-h-screen bg-background font-inter text-on-surface antialiased">
+<div class="min-h-screen">
+  <aside class="fixed bottom-0 left-0 top-0 z-[60] hidden w-64 flex-col border-r border-outline-variant/30 bg-surface-container-low p-6 md:flex dark-surface">
+    <a class="mb-10 block" href="/index.html" aria-label="Return to WeatherScope home">
+      <span class="block text-[27px] font-extrabold leading-tight tracking-[-.04em] text-primary">WeatherScope</span>
+      <span class="mt-1 block text-[10px] font-extrabold uppercase tracking-[.22em] text-outline">Crystalline Insights</span>
+    </a>
+    <nav class="flex-1 space-y-1" aria-label="Main navigation">
+      <a class="sidebar-link flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium text-on-surface-variant transition hover:bg-surface-container-high dark-muted" href="/index.html#dashboard"><span class="material-symbols-outlined">dashboard</span><span>Dashboard</span></a>
+      <a class="sidebar-link flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium text-on-surface-variant transition hover:bg-surface-container-high dark-muted" href="/index.html#mapSection"><span class="material-symbols-outlined">map</span><span>Maps</span></a>
+      <a class="sidebar-link flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium text-on-surface-variant transition hover:bg-surface-container-high dark-muted" href="/index.html#resultSection"><span class="material-symbols-outlined">air</span><span>Air Quality</span></a>
+      <a class="sidebar-link flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium text-on-surface-variant transition hover:bg-surface-container-high dark-muted" href="/favorites.html"><span class="material-symbols-outlined">star</span><span>Favorites</span></a>
+    </nav>
+    <div class="mt-auto space-y-1 border-t border-outline-variant/20 pt-6">
+      <button class="mb-4 w-full rounded-lg bg-primary px-4 py-3 text-sm font-extrabold text-white shadow-sm transition hover:opacity-90" type="button">Upgrade Pro</button>
+      <button id="themeBtn" class="flex w-full items-center gap-3 rounded-lg px-4 py-2 text-left text-[13px] text-on-surface-variant transition hover:bg-surface-container-high dark-muted" type="button"><span class="material-symbols-outlined text-[20px]">dark_mode</span><span>Theme</span></button>
+      <a class="sidebar-link active flex items-center gap-3 rounded-lg px-4 py-2 text-[13px] font-bold" href="/help.html"><span class="material-symbols-outlined text-[20px]" style="font-variation-settings:'FILL' 1">help</span><span>Help</span></a>
+    </div>
+  </aside>
+
+  <main class="relative min-h-screen md:ml-64">
+    <header class="fixed left-0 right-0 top-0 z-50 border-b border-outline-variant/20 bg-surface/85 backdrop-blur-xl md:left-64 dark-surface">
+      <div class="mx-auto flex h-16 max-w-[1100px] items-center justify-between px-5 md:px-10">
+        <a class="text-xl font-extrabold tracking-[-.04em] text-primary md:hidden" href="/index.html">WS</a>
+        <div class="hidden items-center gap-2 text-sm text-on-surface-variant sm:flex dark-muted"><span class="material-symbols-outlined text-[19px]">support_agent</span><span>WeatherScope Help Center</span></div>
+        <div class="flex items-center gap-2">
+          <button id="headerThemeBtn" class="rounded-full p-2 text-on-surface-variant transition hover:bg-surface-container-high dark-muted" aria-label="Toggle theme"><span class="material-symbols-outlined">dark_mode</span></button>
+          <a class="rounded-lg bg-primary px-4 py-2 text-xs font-extrabold text-white shadow-sm transition hover:opacity-90" href="mailto:support@weatherscope.app">Contact support</a>
+        </div>
+      </div>
+    </header>
+
+    <div class="mobile-safe-bottom mx-auto max-w-[900px] px-5 pb-16 pt-24 md:px-10 md:pt-28">
+      <section class="fade-up mb-10">
+        <span class="mb-3 inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-xs font-bold text-primary"><span class="material-symbols-outlined text-[16px]">help_center</span>Support</span>
+        <h1 class="text-[36px] font-extrabold leading-[1.02] tracking-[-.05em] sm:text-[48px]">Help &amp; Support</h1>
+        <p class="mt-3 max-w-xl text-base leading-7 text-on-surface-variant dark-muted">Find setup guides, understand weather data, and solve common WeatherScope issues.</p>
+      </section>
+
+      <section class="fade-up mb-10" style="animation-delay:.06s">
+        <label class="sr-only" for="helpSearch">Search help articles</label>
+        <div class="relative">
+          <span class="material-symbols-outlined pointer-events-none absolute left-5 top-1/2 -translate-y-1/2 text-outline">search</span>
+          <input id="helpSearch" class="dark-input w-full rounded-xl border border-transparent bg-surface-container-highest py-5 pl-14 pr-12 text-sm shadow-sm outline-none transition placeholder:text-outline focus:border-primary focus:ring-4 focus:ring-primary/10" type="search" placeholder="Search articles, guides, or questions..." autocomplete="off" />
+          <button id="clearSearch" class="absolute right-4 top-1/2 hidden -translate-y-1/2 rounded-full p-1 text-outline hover:bg-white/50" aria-label="Clear search"><span class="material-symbols-outlined text-[20px]">close</span></button>
+        </div>
+        <p id="searchStatus" class="mt-3 min-h-[20px] text-xs text-outline" aria-live="polite"></p>
+      </section>
+
+      <section id="categories" class="mb-14 grid grid-cols-1 gap-5 sm:grid-cols-2">
+        <button class="help-card glass dark-card rounded-2xl p-6 text-left shadow-card" data-category="getting-started"><span class="mb-5 flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-primary"><span class="material-symbols-outlined">rocket_launch</span></span><h2 class="text-base font-extrabold">Getting Started</h2><p class="mt-2 text-sm leading-6 text-on-surface-variant dark-muted">Dashboard tour, location search, units, and core features.</p></button>
+        <button class="help-card glass dark-card rounded-2xl p-6 text-left shadow-card" data-category="weather-data"><span class="mb-5 flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-primary"><span class="material-symbols-outlined">monitoring</span></span><h2 class="text-base font-extrabold">Weather Data</h2><p class="mt-2 text-sm leading-6 text-on-surface-variant dark-muted">Forecasts, UV index, humidity, wind, maps, and AQI.</p></button>
+        <button class="help-card glass dark-card rounded-2xl p-6 text-left shadow-card" data-category="account"><span class="mb-5 flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-primary"><span class="material-symbols-outlined">manage_accounts</span></span><h2 class="text-base font-extrabold">Favorites &amp; Preferences</h2><p class="mt-2 text-sm leading-6 text-on-surface-variant dark-muted">Saved cities, unit settings, theme, and local data.</p></button>
+        <button class="help-card glass dark-card rounded-2xl p-6 text-left shadow-card" data-category="troubleshooting"><span class="mb-5 flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-primary"><span class="material-symbols-outlined">build</span></span><h2 class="text-base font-extrabold">Troubleshooting</h2><p class="mt-2 text-sm leading-6 text-on-surface-variant dark-muted">Loading, location, map, connectivity, and display fixes.</p></button>
+      </section>
+
+      <section class="mb-14">
+        <div class="mb-6 flex items-center justify-between"><div><p class="text-xs font-extrabold uppercase tracking-[.16em] text-primary">Knowledge base</p><h2 class="mt-1 text-xl font-extrabold tracking-[-.03em]">Frequently asked questions</h2></div><button id="showAll" class="text-xs font-bold text-primary hover:underline">View all</button></div>
+        <div id="faqList" class="space-y-3">
+          <article class="faq-item dark-card overflow-hidden rounded-xl border border-transparent bg-surface-container transition hover:border-outline-variant/40" data-category="getting-started" data-search="favorite city saved location star dashboard add remove">
+            <button class="faq-toggle flex w-full items-center justify-between gap-4 p-5 text-left" aria-expanded="false"><span class="font-bold">How do I add a favorite city?</span><span class="faq-chevron material-symbols-outlined transition-transform">expand_more</span></button><div class="faq-answer"><div><p class="px-5 pb-5 text-sm leading-6 text-on-surface-variant dark-muted">Search for a city from the dashboard, open its weather result, then select the star button. The city will appear on the Favorites page. Select the star again to remove it.</p></div></div>
+          </article>
+          <article class="faq-item dark-card overflow-hidden rounded-xl border border-transparent bg-surface-container transition hover:border-outline-variant/40" data-category="weather-data" data-search="daily guide icons weather symbol rain cloud sun snow meaning">
+            <button class="faq-toggle flex w-full items-center justify-between gap-4 p-5 text-left" aria-expanded="false"><span class="font-bold">What do the weather icons mean?</span><span class="faq-chevron material-symbols-outlined transition-transform">expand_more</span></button><div class="faq-answer"><div><p class="px-5 pb-5 text-sm leading-6 text-on-surface-variant dark-muted">Icons summarize the expected condition for that time period: clear sky, cloud cover, rain, thunderstorms, snow, mist, or other atmospheric conditions. The text description beside each icon provides the precise condition.</p></div></div>
+          </article>
+          <article class="faq-item dark-card overflow-hidden rounded-xl border border-transparent bg-surface-container transition hover:border-outline-variant/40" data-category="weather-data" data-search="aqi air quality index calculated pm2.5 pm10 pollution">
+            <button class="faq-toggle flex w-full items-center justify-between gap-4 p-5 text-left" aria-expanded="false"><span class="font-bold">How is the Air Quality Index shown?</span><span class="faq-chevron material-symbols-outlined transition-transform">expand_more</span></button><div class="faq-answer"><div><p class="px-5 pb-5 text-sm leading-6 text-on-surface-variant dark-muted">WeatherScope displays the AQI value supplied by its weather data service and groups it into an easy-to-read health category. Pollutant details may include PM2.5, PM10, nitrogen dioxide, ozone, and related measurements when available.</p></div></div>
+          </article>
+          <article class="faq-item dark-card overflow-hidden rounded-xl border border-transparent bg-surface-container transition hover:border-outline-variant/40" data-category="getting-started" data-search="celsius fahrenheit metric imperial unit temperature change">
+            <button class="faq-toggle flex w-full items-center justify-between gap-4 p-5 text-left" aria-expanded="false"><span class="font-bold">How do I switch between Celsius and Fahrenheit?</span><span class="faq-chevron material-symbols-outlined transition-transform">expand_more</span></button><div class="faq-answer"><div><p class="px-5 pb-5 text-sm leading-6 text-on-surface-variant dark-muted">Use the °C / °F unit control in the dashboard header. WeatherScope remembers your selection in the browser for future visits.</p></div></div>
+          </article>
+          <article class="faq-item dark-card overflow-hidden rounded-xl border border-transparent bg-surface-container transition hover:border-outline-variant/40" data-category="troubleshooting" data-search="location permission current location gps denied browser not working">
+            <button class="faq-toggle flex w-full items-center justify-between gap-4 p-5 text-left" aria-expanded="false"><span class="font-bold">Why is my current location not working?</span><span class="faq-chevron material-symbols-outlined transition-transform">expand_more</span></button><div class="faq-answer"><div><p class="px-5 pb-5 text-sm leading-6 text-on-surface-variant dark-muted">Confirm that location access is enabled for the browser and WeatherScope. Reload the page after changing permission. You can always search for your city manually if GPS is unavailable.</p></div></div>
+          </article>
+          <article class="faq-item dark-card overflow-hidden rounded-xl border border-transparent bg-surface-container transition hover:border-outline-variant/40" data-category="troubleshooting" data-search="map blank loading tiles internet connection cache refresh">
+            <button class="faq-toggle flex w-full items-center justify-between gap-4 p-5 text-left" aria-expanded="false"><span class="font-bold">What should I do if the map is blank?</span><span class="faq-chevron material-symbols-outlined transition-transform">expand_more</span></button><div class="faq-answer"><div><p class="px-5 pb-5 text-sm leading-6 text-on-surface-variant dark-muted">Check your connection, refresh the page, and disable restrictive content blockers for the site. If the problem continues, clear the browser cache and reopen WeatherScope.</p></div></div>
+          </article>
+        </div>
+        <div id="emptyState" hidden class="dark-card mt-4 rounded-2xl border border-dashed border-outline-variant bg-surface-container-low p-8 text-center"><span class="material-symbols-outlined text-4xl text-outline">search_off</span><h3 class="mt-3 font-extrabold">No matching help articles</h3><p class="mt-2 text-sm text-on-surface-variant dark-muted">Try a shorter search term such as “location,” “AQI,” or “favorites.”</p></div>
+      </section>
+
+      <section class="relative overflow-hidden rounded-2xl bg-primary p-7 text-white shadow-floating sm:p-8">
+        <div class="absolute -right-12 -top-16 h-44 w-44 rounded-full bg-white/10 blur-2xl"></div>
+        <div class="relative flex flex-col justify-between gap-6 md:flex-row md:items-center">
+          <div class="max-w-md"><h2 class="text-xl font-extrabold">Still need help?</h2><p class="mt-2 text-sm leading-6 text-white/85">Send a support request or open the quick-help chat. Include the city, browser, and error message when reporting a problem.</p></div>
+          <div class="flex flex-col gap-3 sm:flex-row"><a class="flex items-center justify-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-extrabold text-primary transition hover:bg-surface-container-low" href="mailto:support@weatherscope.app?subject=WeatherScope%20Support%20Request"><span class="material-symbols-outlined text-[19px]">mail</span>Email Support</a><button id="chatBtn" class="flex items-center justify-center gap-2 rounded-xl border border-white/20 bg-white/10 px-5 py-3 text-sm font-extrabold text-white transition hover:bg-white/20"><span class="material-symbols-outlined text-[19px]">forum</span>Quick Help</button></div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <nav class="fixed bottom-0 left-0 right-0 z-50 flex items-center justify-around border-t border-outline-variant/20 bg-surface/90 px-5 py-2 pb-[calc(.5rem+env(safe-area-inset-bottom))] backdrop-blur-xl md:hidden dark-surface" aria-label="Mobile navigation">
+    <a class="flex flex-col items-center gap-0.5 text-on-surface-variant dark-muted" href="/index.html"><span class="material-symbols-outlined text-[22px]">dashboard</span><span class="text-[9px] font-bold uppercase">Home</span></a>
+    <a class="flex flex-col items-center gap-0.5 text-on-surface-variant dark-muted" href="/index.html#mapSection"><span class="material-symbols-outlined text-[22px]">map</span><span class="text-[9px] font-bold uppercase">Maps</span></a>
+    <a class="flex flex-col items-center gap-0.5 text-on-surface-variant dark-muted" href="/favorites.html"><span class="material-symbols-outlined text-[22px]">star</span><span class="text-[9px] font-bold uppercase">Saved</span></a>
+    <a class="flex flex-col items-center gap-0.5 text-primary" href="/help.html"><span class="material-symbols-outlined text-[22px]" style="font-variation-settings:'FILL' 1">help</span><span class="text-[9px] font-bold uppercase">Help</span></a>
+  </nav>
+</div>
+
+<div id="chatModal" hidden class="fixed inset-0 z-[100] flex items-end justify-center bg-on-surface/40 p-4 backdrop-blur-sm sm:items-center" role="dialog" aria-modal="true" aria-labelledby="chatTitle">
+  <div class="dark-card w-full max-w-md rounded-2xl bg-white p-6 shadow-floating">
+    <div class="flex items-start justify-between"><div><p class="text-xs font-extrabold uppercase tracking-[.15em] text-primary">Quick help</p><h2 id="chatTitle" class="mt-1 text-xl font-extrabold">What are you having trouble with?</h2></div><button id="closeChat" class="rounded-full p-2 text-outline hover:bg-surface-container"><span class="material-symbols-outlined">close</span></button></div>
+    <div class="mt-5 grid gap-3"><button class="quick-topic rounded-xl border border-outline-variant/40 p-4 text-left text-sm font-bold hover:border-primary hover:bg-primary/5" data-query="location">My location is not working</button><button class="quick-topic rounded-xl border border-outline-variant/40 p-4 text-left text-sm font-bold hover:border-primary hover:bg-primary/5" data-query="favorites">I need help with favorites</button><button class="quick-topic rounded-xl border border-outline-variant/40 p-4 text-left text-sm font-bold hover:border-primary hover:bg-primary/5" data-query="AQI">I want to understand AQI</button><a class="rounded-xl bg-primary p-4 text-center text-sm font-extrabold text-white" href="mailto:support@weatherscope.app?subject=WeatherScope%20Support%20Request">Contact a support specialist</a></div>
+  </div>
+</div>
+<script>
+  const THEME_KEY='weatherscope:theme';
+  const root=document.documentElement, themeBtns=[document.getElementById('themeBtn'),document.getElementById('headerThemeBtn')].filter(Boolean);
+  function applyTheme(theme){const dark=theme==='dark';root.classList.toggle('dark',dark);root.classList.toggle('light',!dark);themeBtns.forEach(btn=>{const icon=btn.querySelector('.material-symbols-outlined');if(icon)icon.textContent=dark?'light_mode':'dark_mode';const label=btn.querySelector('span:last-child');if(label&&label!==icon&&btn.id==='themeBtn')label.textContent=dark?'Light mode':'Dark mode';});}
+  applyTheme(localStorage.getItem(THEME_KEY)||'light');themeBtns.forEach(btn=>btn.addEventListener('click',()=>{const next=root.classList.contains('dark')?'light':'dark';localStorage.setItem(THEME_KEY,next);applyTheme(next)}));
+  const items=[...document.querySelectorAll('.faq-item')], search=document.getElementById('helpSearch'), status=document.getElementById('searchStatus'), empty=document.getElementById('emptyState'), clear=document.getElementById('clearSearch');
+  function filterFAQs(term='',category=''){const q=term.trim().toLowerCase();let shown=0;items.forEach(item=>{const matchesText=!q||(item.textContent+' '+item.dataset.search).toLowerCase().includes(q);const matchesCat=!category||item.dataset.category===category;const show=matchesText&&matchesCat;item.hidden=!show;if(show)shown++;});empty.hidden=shown!==0;status.textContent=q||category?`${shown} help article${shown===1?'':'s'} found`:'';clear.classList.toggle('hidden',!q);document.getElementById('faqList').scrollIntoView({behavior:q||category?'smooth':'auto',block:'start'});}
+  search.addEventListener('input',()=>filterFAQs(search.value));clear.addEventListener('click',()=>{search.value='';filterFAQs();search.focus()});
+  document.querySelectorAll('[data-category]').forEach(card=>{if(card.classList.contains('faq-item'))return;card.addEventListener('click',()=>{search.value='';filterFAQs('',card.dataset.category)})});
+  document.getElementById('showAll').addEventListener('click',()=>{search.value='';filterFAQs()});
+  document.querySelectorAll('.faq-toggle').forEach(btn=>btn.addEventListener('click',()=>{const item=btn.closest('.faq-item'),open=item.classList.toggle('open');btn.setAttribute('aria-expanded',String(open))}));
+  const modal=document.getElementById('chatModal');document.getElementById('chatBtn').addEventListener('click',()=>{modal.hidden=false;document.getElementById('closeChat').focus()});document.getElementById('closeChat').addEventListener('click',()=>modal.hidden=true);modal.addEventListener('click',e=>{if(e.target===modal)modal.hidden=true});document.addEventListener('keydown',e=>{if(e.key==='Escape')modal.hidden=true});
+  document.querySelectorAll('.quick-topic').forEach(btn=>btn.addEventListener('click',()=>{modal.hidden=true;search.value=btn.dataset.query;filterFAQs(search.value)}));
+</script>
+</body>
+</html>
