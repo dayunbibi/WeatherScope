@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html class="light" lang="en">
   <head>
     <meta charset="UTF-8" />
 
     <meta
       name="description"
-      content="WeatherScope - A responsive weather dashboard with current conditions, hourly forecasts, air quality, UV index, maps, favorites, and location search."
+      content="WeatherScope - Real-time weather, hourly forecasts, air quality, UV index, maps, favorites, and location search."
     />
 
     <meta
@@ -13,7 +13,10 @@
       content="width=device-width, initial-scale=1, viewport-fit=cover"
     />
 
-    <meta name="theme-color" content="#3567e9" />
+    <meta
+      name="theme-color"
+      content="#3567e9"
+    />
 
     <meta
       name="apple-mobile-web-app-capable"
@@ -30,12 +33,14 @@
       content="WeatherScope"
     />
 
-    <title>WeatherScope</title>
+    <title>
+      WeatherScope | Atmospheric Precision
+    </title>
 
     <link
       rel="icon"
       type="image/jpeg"
-      href="images/favicon.jpeg"
+      href="/images/favicon.jpeg"
     />
 
     <link
@@ -49,6 +54,16 @@
     />
 
     <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
       rel="stylesheet"
       href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
       integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
@@ -57,512 +72,1197 @@
 
     <link
       rel="stylesheet"
-      href="css/style.css"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
     />
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+
+        theme: {
+          extend: {
+            colors: {
+              "on-primary-fixed": "#00174d",
+              "surface-variant": "#d9e2fc",
+              "secondary-fixed-dim": "#fabc27",
+              "primary-fixed-dim": "#b5c4ff",
+              "on-secondary": "#ffffff",
+              "inverse-surface": "#273044",
+              "on-error": "#ffffff",
+              tertiary: "#00653a",
+              "surface-container-highest": "#d9e2fc",
+              "secondary-container": "#fdbf2a",
+              outline: "#737686",
+              "on-background": "#121b2e",
+              "surface-bright": "#f9f9ff",
+              secondary: "#7a5900",
+              "primary-fixed": "#dbe1ff",
+              "surface-container-low": "#f1f3ff",
+              "on-secondary-fixed-variant": "#5c4200",
+              "inverse-on-surface": "#edf0ff",
+              "tertiary-fixed": "#7afbae",
+              surface: "#f9f9ff",
+              "error-container": "#ffdad6",
+              "surface-container-lowest": "#ffffff",
+              "on-tertiary-fixed-variant": "#00522e",
+              "on-tertiary-container": "#d7ffe0",
+              "tertiary-fixed-dim": "#5cde94",
+              "on-surface-variant": "#434654",
+              "on-primary-fixed-variant": "#003dab",
+              "surface-container": "#e9edff",
+              background: "#f9f9ff",
+              "on-secondary-fixed": "#261900",
+              "on-primary-container": "#f6f5ff",
+              "tertiary-container": "#00814b",
+              primary: "#3567e9",
+              "on-surface": "#121b2e",
+              "on-error-container": "#93000a",
+              "primary-container": "#3567e9",
+              "surface-tint": "#1853d6",
+              "outline-variant": "#c3c5d7",
+              "on-tertiary": "#ffffff",
+              "surface-container-high": "#e1e8ff",
+              "on-primary": "#ffffff",
+              "on-secondary-container": "#6d4f00",
+              "secondary-fixed": "#ffdea3",
+              "surface-dim": "#d1daf4",
+              error: "#ba1a1a",
+              "inverse-primary": "#b5c4ff",
+              "on-tertiary-fixed": "#00210f",
+            },
+
+            borderRadius: {
+              DEFAULT: "8px",
+              lg: "8px",
+              xl: "8px",
+              full: "9999px",
+            },
+
+            fontFamily: {
+              inter: [
+                "Inter",
+                "sans-serif",
+              ],
+            },
+
+            boxShadow: {
+              card:
+                "0 8px 28px rgba(31, 38, 135, 0.06)",
+
+              floating:
+                "0 18px 50px rgba(31, 38, 135, 0.12)",
+            },
+          },
+        },
+      };
+    </script>
+
+    <link
+      rel="stylesheet"
+      href="/css/style.css"
+    />
+
+    <style>
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: "Inter", sans-serif;
+      }
+
+      button,
+      input {
+        font: inherit;
+      }
+
+      [hidden] {
+        display: none !important;
+      }
+
+      .crystalline {
+        background: rgba(255, 255, 255, 0.68);
+        border: 1px solid rgba(255, 255, 255, 0.65);
+        box-shadow: 0 12px 34px rgba(31, 38, 135, 0.08);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+      }
+
+      .material-symbols-outlined {
+        font-variation-settings:
+          "FILL" 0,
+          "wght" 400,
+          "GRAD" 0,
+          "opsz" 24;
+
+        vertical-align: middle;
+      }
+
+      .sidebar-link.active {
+        color: #3567e9;
+        background: rgba(53, 103, 233, 0.1);
+      }
+
+      .sidebar-link.active .material-symbols-outlined {
+        font-variation-settings:
+          "FILL" 1,
+          "wght" 500,
+          "GRAD" 0,
+          "opsz" 24;
+      }
+
+      #weatherMap {
+        width: 100%;
+        height: 400px;
+        min-height: 400px;
+        z-index: 1;
+      }
+
+      #citySuggestions:not([hidden]) {
+        display: block;
+      }
+
+      .autocomplete-panel {
+        position: absolute;
+        top: calc(100% + 10px);
+        right: 0;
+        left: 0;
+        z-index: 100;
+        overflow: hidden;
+        max-height: 300px;
+        overflow-y: auto;
+        background: #ffffff;
+        border: 1px solid rgba(195, 197, 215, 0.55);
+        border-radius: 10px;
+        box-shadow: 0 20px 50px rgba(18, 27, 46, 0.13);
+      }
+
+      .autocomplete-panel button,
+      .autocomplete-panel [role="option"] {
+        display: block;
+        width: 100%;
+        padding: 13px 16px;
+        color: #121b2e;
+        text-align: left;
+        background: transparent;
+        border: 0;
+        cursor: pointer;
+      }
+
+      .autocomplete-panel button:hover,
+      .autocomplete-panel [role="option"]:hover,
+      .autocomplete-panel [aria-selected="true"] {
+        background: #f1f3ff;
+      }
+
+      .button-spinner {
+        display: none;
+        width: 18px;
+        height: 18px;
+        border: 2px solid rgba(255, 255, 255, 0.45);
+        border-top-color: #ffffff;
+        border-radius: 9999px;
+        animation: spin 0.7s linear infinite;
+      }
+
+      #searchBtn.is-loading .button-text {
+        display: none;
+      }
+
+      #searchBtn.is-loading .button-spinner {
+        display: inline-block;
+      }
+
+      .status {
+        min-height: 24px;
+        text-align: center;
+      }
+
+      .status:empty {
+        min-height: 0;
+      }
+
+      .unit-btn.active {
+        color: #ffffff;
+        background: #3567e9;
+      }
+
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+
+      .no-scrollbar {
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+      }
+
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        overflow: hidden;
+        margin: -1px;
+        white-space: nowrap;
+        border: 0;
+        clip: rect(0, 0, 0, 0);
+      }
+
+      ::-webkit-scrollbar {
+        width: 7px;
+        height: 7px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: #d1daf4;
+        border-radius: 9999px;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      @media (max-width: 767px) {
+        #weatherMap {
+          height: 340px;
+          min-height: 340px;
+        }
+
+        .mobile-safe-bottom {
+          padding-bottom:
+            calc(
+              92px +
+              env(safe-area-inset-bottom)
+            );
+        }
+      }
+    </style>
   </head>
 
-  <body>
-    <main class="app">
-      <!-- ================= TOP ACTIONS ================= -->
+  <body
+    class="min-h-screen bg-background font-inter text-on-surface antialiased"
+    data-weather="default"
+  >
+    <div
+      id="weatherApp"
+      class="min-h-screen"
+    >
+      <!-- Desktop Sidebar -->
 
-      <div class="top-actions">
-       <button
-          id="shareWeatherBtn"
-          class="secondary-btn share-weather-button"
-          type="button"
-          aria-label="Share current weather"
-          hidden
-        >
-          🔗 Share
-        </button>
-
+      <aside
+        class="fixed bottom-0 left-0 top-0 z-[60] hidden w-64 flex-col border-r border-outline-variant/30 bg-surface-container-low p-6 md:flex"
+      >
         <button
-          id="installAppBtn"
-          class="install-app-button"
+          id="homeButton"
+          class="mb-10 block text-left"
           type="button"
-          aria-label="Install WeatherScope app"
-          hidden
+          aria-label="Return to WeatherScope home"
         >
-          Install App
+          <span
+            class="block text-[27px] font-extrabold leading-tight tracking-[-0.04em] text-primary"
+          >
+            WeatherScope
+          </span>
+
+          <span
+            class="mt-1 block text-[10px] font-extrabold uppercase tracking-[0.22em] text-outline"
+          >
+            Crystalline Insights
+          </span>
         </button>
-      </div>
 
-      <!-- ================= HEADER ================= -->
-
-      <header class="app-header">
-        <p class="eyebrow">
-          WEATHER DASHBOARD
-        </p>
-
-        <h1>
-          WeatherScope
-        </h1>
-
-        <p class="subtitle">
-          Real-time weather, hourly forecasts, air quality,
-          UV information, maps, and saved cities.
-        </p>
-      </header>
-
-      <!-- ================= SEARCH ================= -->
-
-      <section
-        class="search-section"
-        aria-labelledby="searchHeading"
-      >
-        <h2
-          id="searchHeading"
-          class="sr-only"
+        <nav
+          class="flex-1 space-y-1"
+          aria-label="Main navigation"
         >
-          Search Weather
-        </h2>
-
-        <form
-          id="searchForm"
-          class="search-form"
-          novalidate
-        >
-          <label for="cityInput">
-            City
-          </label>
-
-          <div class="search-box">
-            <div class="autocomplete-wrapper">
-              <input
-                type="search"
-                id="cityInput"
-                name="city"
-                role="combobox"
-                placeholder="Search city..."
-                autocomplete="off"
-                maxlength="80"
-                aria-autocomplete="list"
-                aria-controls="citySuggestions"
-                aria-expanded="false"
-                aria-haspopup="listbox"
-                required
-              />
-
-              <div
-                id="citySuggestions"
-                class="autocomplete-panel"
-                role="listbox"
-                aria-label="City suggestions"
-                hidden
-              ></div>
-            </div>
-
-            <button
-              id="searchBtn"
-              type="submit"
-              aria-label="Search weather by city"
-            >
-              <span class="button-text">
-                Search
-              </span>
-
-              <span
-                class="button-spinner"
-                aria-hidden="true"
-              ></span>
-            </button>
-          </div>
-
-          <!-- ================= TOOLBAR ================= -->
-
-          <div class="toolbar">
-            <button
-              id="locationBtn"
-              type="button"
-              class="secondary-btn"
-              aria-label="Use current location"
-            >
-              📍 Use My Location
-            </button>
-
-            <div
-              class="unit-toggle"
-              role="group"
-              aria-label="Temperature unit"
-            >
-              <button
-                id="metricBtn"
-                type="button"
-                class="unit-btn active"
-                aria-label="Use Celsius"
-                aria-pressed="true"
-              >
-                °C
-              </button>
-
-              <button
-                id="imperialBtn"
-                type="button"
-                class="unit-btn"
-                aria-label="Use Fahrenheit"
-                aria-pressed="false"
-              >
-                °F
-              </button>
-            </div>
-          </div>
-        </form>
-      </section>
-
-      <!-- ================= STATUS ================= -->
-
-      <section
-        id="status"
-        class="status"
-        role="status"
-        aria-live="polite"
-        aria-atomic="true"
-      ></section>
-
-      <!-- ================= CURRENT WEATHER ================= -->
-
-      <section
-        class="result-section"
-        aria-label="Current weather"
-      >
-        <div
-          id="weatherResult"
-          class="weather-result"
-        >
-          <div class="empty-state">
+          <a
+            class="sidebar-link active flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-bold transition"
+            href="#dashboard"
+          >
             <span
-              class="empty-state-icon"
-              aria-hidden="true"
+              class="material-symbols-outlined"
             >
-              ☁️
+              dashboard
             </span>
 
-            <h2>
-              Search for a city
-            </h2>
+            <span>
+              Dashboard
+            </span>
+          </a>
 
-            <p>
-              Current weather will appear here.
-            </p>
-          </div>
-        </div>
-      </section>
+          <a
+            class="sidebar-link flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium text-on-surface-variant transition hover:bg-surface-container-high"
+            href="#mapSection"
+          >
+            <span
+              class="material-symbols-outlined"
+            >
+              map
+            </span>
 
-      <!-- ================= TODAY'S HIGHLIGHTS ================= -->
+            <span>
+              Maps
+            </span>
+          </a>
 
-      <section
-        id="highlightsSection"
-        class="highlights-section"
-        aria-labelledby="highlightsHeading"
-        hidden
-      >
-        <div class="section-heading">
-          <div>
-            <p class="section-kicker">
-              TODAY
-            </p>
+          <a
+            class="sidebar-link flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium text-on-surface-variant transition hover:bg-surface-container-high"
+            href="#resultSection"
+          >
+            <span
+              class="material-symbols-outlined"
+            >
+              air
+            </span>
 
-            <h2 id="highlightsHeading">
-              Today’s Highlights
-            </h2>
-          </div>
-        </div>
+            <span>
+              Air Quality
+            </span>
+          </a>
 
-        <div
-          id="highlightsGrid"
-          class="highlights-grid"
-        ></div>
-      </section>
+          <a
+            class="sidebar-link flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium text-on-surface-variant transition hover:bg-surface-container-high"
+            href="/favorites.html"
+          >
+            <span
+              class="material-symbols-outlined"
+            >
+              star
+            </span>
 
-      <!-- ================= WEATHER MAP ================= -->
-
-      <section
-        id="mapSection"
-        class="map-section"
-        aria-labelledby="mapHeading"
-        hidden
-      >
-        <div class="section-heading">
-          <div>
-            <p class="section-kicker">
-              LOCATION
-            </p>
-
-            <h2 id="mapHeading">
-              Weather Map
-            </h2>
-          </div>
-        </div>
+            <span>
+              Favorites
+            </span>
+          </a>
+        </nav>
 
         <div
-          id="weatherMap"
-          class="weather-map"
-          role="region"
-          aria-label="Map showing the selected weather location"
-          tabindex="0"
-        ></div>
-      </section>
-
-      <!-- ================= HOURLY ================= -->
-
-      <section
-        id="hourlySection"
-        class="forecast-section"
-        aria-labelledby="hourlyHeading"
-        hidden
-      >
-        <div class="section-heading">
-          <div>
-            <p class="section-kicker">
-              TODAY
-            </p>
-
-            <h2 id="hourlyHeading">
-              Hourly Forecast
-            </h2>
-          </div>
-        </div>
-
-        <div
-          id="hourlyList"
-          class="hourly-list"
-        ></div>
-      </section>
-
-      <!-- ================= 5 DAYS ================= -->
-
-      <section
-        id="forecastSection"
-        class="forecast-section"
-        aria-labelledby="forecastHeading"
-        hidden
-      >
-        <div class="section-heading">
-          <div>
-            <p class="section-kicker">
-              NEXT DAYS
-            </p>
-
-            <h2 id="forecastHeading">
-              5-Day Forecast
-            </h2>
-          </div>
-        </div>
-
-        <div
-          id="forecastList"
-          class="forecast-list"
-        ></div>
-      </section>
-
-      <!-- ================= WEATHER RECOMMENDATIONS ================= -->
-
-<section
-  id="recommendationSection"
-  class="recommendation-section"
-  aria-labelledby="recommendationHeading"
-  hidden
->
-  <div class="section-heading recommendation-heading">
-    <div>
-      <p class="section-kicker">TODAY</p>
-
-      <h2 id="recommendationHeading">
-        Weather Recommendations
-      </h2>
-    </div>
-
-    <button
-      id="customizeRecommendationsBtn"
-      class="secondary-btn recommendation-settings-button"
-      type="button"
-      aria-expanded="false"
-      aria-controls="recommendationSettings"
-    >
-      ⚙ Customize
-    </button>
-  </div>
-
-  <div
-    id="recommendationSettings"
-    class="recommendation-settings"
-    hidden
-  >
-    <div class="recommendation-settings-header">
-      <div>
-        <h3>Customize Recommendations</h3>
-        <p>
-          Choose which recommendations you want to see.
-        </p>
-      </div>
-
-      <button
-        id="resetRecommendationsBtn"
-        class="text-button"
-        type="button"
-      >
-        Reset
-      </button>
-    </div>
-
-    <div class="recommendation-options">
-      <label class="recommendation-option">
-        <span>Clothing</span>
-        <input
-          type="checkbox"
-          data-recommendation-preference="clothing"
-        />
-      </label>
-
-      <label class="recommendation-option">
-        <span>Umbrella</span>
-        <input
-          type="checkbox"
-          data-recommendation-preference="umbrella"
-        />
-      </label>
-
-      <label class="recommendation-option">
-        <span>UV Protection</span>
-        <input
-          type="checkbox"
-          data-recommendation-preference="uv"
-        />
-      </label>
-
-      <label class="recommendation-option">
-        <span>Hydration</span>
-        <input
-          type="checkbox"
-          data-recommendation-preference="hydration"
-        />
-      </label>
-
-      <label class="recommendation-option">
-        <span>Wind</span>
-        <input
-          type="checkbox"
-          data-recommendation-preference="wind"
-        />
-      </label>
-
-      <label class="recommendation-option">
-        <span>Outdoor Activity</span>
-        <input
-          type="checkbox"
-          data-recommendation-preference="outdoor"
-        />
-      </label>
-
-      <label class="recommendation-option">
-        <span>Air Quality</span>
-        <input
-          type="checkbox"
-          data-recommendation-preference="airQuality"
-        />
-      </label>
-
-      <label class="recommendation-option">
-        <span>Pet Walk</span>
-        <input
-          type="checkbox"
-          data-recommendation-preference="petWalk"
-        />
-      </label>
-    </div>
-  </div>
-
-  <div
-    id="recommendationGrid"
-    class="recommendation-grid"
-  ></div>
-</section>
-      <!-- ================= FAVOURITES ================= -->
-
-      <section
-        class="recent-section"
-        aria-labelledby="favoriteHeading"
-      >
-        <div class="section-heading">
-          <h2 id="favoriteHeading">
-            Favourite Cities
-          </h2>
-        </div>
-
-        <p
-          id="favoriteEmpty"
-          class="recent-empty"
+          class="mt-auto space-y-1 border-t border-outline-variant/20 pt-6"
         >
-          No favourite cities yet.
-        </p>
-
-        <ul
-          id="favoriteList"
-          class="recent-list"
-        ></ul>
-      </section>
-
-      <!-- ================= RECENT ================= -->
-
-      <section
-        class="recent-section"
-        aria-labelledby="recentHeading"
-      >
-        <div class="section-heading">
-          <h2 id="recentHeading">
-            Recent Cities
-          </h2>
+          <button
+            class="mb-4 w-full rounded-lg bg-primary px-4 py-3 text-sm font-extrabold text-on-primary shadow-sm transition hover:opacity-90"
+            type="button"
+          >
+            Upgrade Pro
+          </button>
 
           <button
-            id="clearRecentBtn"
-            class="text-button"
+            id="themeBtn"
+            class="flex w-full items-center gap-3 rounded-lg px-4 py-2 text-left text-[13px] text-on-surface-variant transition hover:bg-surface-container-high"
             type="button"
-            aria-label="Clear all recent city searches"
+            aria-label="Toggle color theme"
+          >
+            <span
+              class="material-symbols-outlined text-[20px]"
+            >
+              dark_mode
+            </span>
+
+            <span>
+              Theme
+            </span>
+          </button>
+
+          <a
+            class="flex items-center gap-3 rounded-lg px-4 py-2 text-[13px] text-on-surface-variant transition hover:bg-surface-container-high"
+            href="#"
+          >
+            <span
+              class="material-symbols-outlined text-[20px]"
+            >
+              help
+            </span>
+
+            <span>
+              Help
+            </span>
+          </a>
+        </div>
+      </aside>
+
+      <!-- Main Area -->
+
+      <main
+        class="relative min-h-screen md:ml-64"
+      >
+        <!-- Top Navigation -->
+
+        <header
+          class="fixed left-0 right-0 top-0 z-50 border-b border-outline-variant/20 bg-surface/85 backdrop-blur-xl md:left-64"
+        >
+          <div
+            class="mx-auto flex h-16 max-w-[1100px] items-center justify-between px-5 md:px-10"
+          >
+            <div
+              class="flex items-center gap-4"
+            >
+              <span
+                class="text-xl font-extrabold tracking-[-0.04em] text-primary md:hidden"
+              >
+                WS
+              </span>
+
+              <div
+                class="hidden items-center rounded-lg border border-outline-variant/30 bg-surface-container px-3 py-1.5 sm:flex"
+              >
+                <span
+                  class="material-symbols-outlined text-[20px] text-outline"
+                >
+                  search
+                </span>
+
+                <button
+                  class="ml-2 w-40 bg-transparent text-left text-[13px] text-outline"
+                  type="button"
+                  onclick="document.getElementById('cityInput').focus()"
+                >
+                  Search city...
+                </button>
+              </div>
+            </div>
+
+            <div
+              class="flex items-center gap-3 sm:gap-5"
+            >
+              <nav
+                class="hidden items-center gap-6 text-[13px] font-bold text-on-surface-variant lg:flex"
+                aria-label="Dashboard navigation"
+              >
+                <a
+                  class="border-b-2 border-primary py-5 text-primary"
+                  href="#dashboard"
+                >
+                  Dashboard
+                </a>
+
+                <a
+                  class="py-5 transition hover:text-primary"
+                  href="#recentSection"
+                >
+                  History
+                </a>
+              </nav>
+
+              <button
+                class="rounded-full p-2 text-on-surface-variant transition hover:bg-surface-container-high"
+                type="button"
+                aria-label="Notifications"
+              >
+                <span
+                  class="material-symbols-outlined text-[22px]"
+                >
+                  notifications
+                </span>
+              </button>
+
+              <button
+                class="rounded-full p-2 text-on-surface-variant transition hover:bg-surface-container-high"
+                type="button"
+                aria-label="Focus location search"
+                onclick="document.getElementById('locationBtn').click()"
+              >
+                <span
+                  class="material-symbols-outlined text-[22px]"
+                >
+                  my_location
+                </span>
+              </button>
+
+              <div
+                class="mx-1 hidden h-6 w-px bg-outline-variant/40 sm:block"
+              ></div>
+
+              <div
+                class="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-xs font-extrabold text-white"
+                aria-label="User profile"
+              >
+                A
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <div
+          id="dashboard"
+          class="mobile-safe-bottom mx-auto max-w-[1100px] space-y-10 px-5 pb-24 pt-24 md:px-10"
+        >
+          <!-- Hero and Search -->
+
+          <section
+            id="searchSection"
+            class="space-y-6 text-center"
+            aria-labelledby="searchHeading"
+          >
+            <div
+              class="space-y-2"
+            >
+              <p
+                class="text-[11px] font-extrabold uppercase tracking-[0.2em] text-primary"
+              >
+                Atmospheric Precision
+              </p>
+
+              <h1
+                class="text-[38px] font-extrabold leading-none tracking-[-0.055em] text-on-surface md:text-5xl"
+              >
+                WeatherScope
+              </h1>
+
+              <p
+                class="mx-auto max-w-xl text-sm leading-6 text-on-surface-variant md:text-base"
+              >
+                Real-time weather, hourly forecasts, air quality,
+                UV information, maps, and saved cities.
+              </p>
+            </div>
+
+            <h2
+              id="searchHeading"
+              class="sr-only"
+            >
+              Search weather
+            </h2>
+
+            <form
+              id="searchForm"
+              class="relative mx-auto max-w-2xl"
+              novalidate
+            >
+              <div
+                class="crystalline flex items-center gap-2 rounded-xl p-2"
+              >
+                <div
+                  class="relative flex min-w-0 flex-1 items-center px-2 sm:px-4"
+                >
+                  <span
+                    class="material-symbols-outlined flex-none text-primary"
+                  >
+                    location_on
+                  </span>
+
+                  <input
+                    id="cityInput"
+                    class="ml-2 min-w-0 flex-1 border-0 bg-transparent py-3 text-sm font-semibold text-on-surface placeholder:text-outline focus:ring-0 sm:text-base"
+                    name="city"
+                    type="search"
+                    role="combobox"
+                    placeholder="Enter city name..."
+                    autocomplete="off"
+                    maxlength="80"
+                    aria-autocomplete="list"
+                    aria-controls="citySuggestions"
+                    aria-expanded="false"
+                    aria-haspopup="listbox"
+                    required
+                  />
+
+                  <div
+                    id="citySuggestions"
+                    class="autocomplete-panel"
+                    role="listbox"
+                    aria-label="City suggestions"
+                    hidden
+                  ></div>
+                </div>
+
+                <button
+                  id="searchBtn"
+                  class="flex min-h-12 min-w-[94px] items-center justify-center rounded-lg bg-primary px-5 py-3 text-sm font-bold text-on-primary transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60 sm:min-w-[116px] sm:px-8"
+                  type="submit"
+                  aria-label="Search weather by city"
+                >
+                  <span
+                    class="button-text"
+                  >
+                    Search
+                  </span>
+
+                  <span
+                    class="button-spinner"
+                    aria-hidden="true"
+                  ></span>
+                </button>
+              </div>
+
+              <div
+                class="mt-4 flex flex-wrap items-center justify-center gap-3"
+              >
+                <button
+                  id="locationBtn"
+                  class="flex items-center gap-2 rounded-lg px-4 py-2 text-[13px] font-bold text-primary transition hover:bg-primary/5"
+                  type="button"
+                  aria-label="Use current location"
+                >
+                  <span
+                    class="material-symbols-outlined text-[19px]"
+                  >
+                    my_location
+                  </span>
+
+                  <span>
+                    Use My Location
+                  </span>
+                </button>
+              </div>
+            </form>
+          </section>
+
+          <!-- Status -->
+
+          <section
+            id="status"
+            class="status text-sm font-medium text-on-surface-variant"
+            role="status"
+            aria-live="polite"
+            aria-atomic="true"
+          ></section>
+
+          <!-- Current Weather -->
+
+          <section
+            id="resultSection"
+            class="result-section"
+            aria-label="Current weather"
+          >
+            <div
+              id="weatherResult"
+              class="weather-result"
+            ></div>
+          </section>
+
+          <!-- Hourly Forecast -->
+
+          <section
+            id="hourlySection"
+            class="forecast-section hourly-section space-y-4"
+            aria-labelledby="hourlyHeading"
             hidden
           >
-            Clear All
-          </button>
+            <div
+              class="flex items-end justify-between"
+            >
+              <div>
+                <p
+                  class="text-[10px] font-extrabold uppercase tracking-[0.18em] text-outline"
+                >
+                  Today
+                </p>
+
+                <h2
+                  id="hourlyHeading"
+                  class="mt-1 text-xl font-bold tracking-[-0.025em]"
+                >
+                  Hourly Forecast
+                </h2>
+              </div>
+
+              <span
+                class="text-xs font-bold text-primary"
+              >
+                Full Report
+              </span>
+            </div>
+
+            <div
+              id="hourlyList"
+              class="hourly-list no-scrollbar flex gap-3 overflow-x-auto pb-3"
+            ></div>
+          </section>
+
+          <!-- Five Day Forecast -->
+
+          <section
+            id="forecastSection"
+            class="forecast-section space-y-4"
+            aria-labelledby="forecastHeading"
+            hidden
+          >
+            <div>
+              <p
+                class="text-[10px] font-extrabold uppercase tracking-[0.18em] text-outline"
+              >
+                Next days
+              </p>
+
+              <h2
+                id="forecastHeading"
+                class="mt-1 text-xl font-bold tracking-[-0.025em]"
+              >
+                5-Day Forecast
+              </h2>
+            </div>
+
+            <div
+              id="forecastList"
+              class="forecast-list grid gap-3 sm:grid-cols-2 lg:grid-cols-5"
+            ></div>
+          </section>
+
+          <!-- Weather Map -->
+
+          <section
+            id="mapSection"
+            class="map-section space-y-4"
+            aria-labelledby="mapHeading"
+            hidden
+          >
+            <div>
+              <p
+                class="text-[10px] font-extrabold uppercase tracking-[0.18em] text-outline"
+              >
+                Location
+              </p>
+
+              <h2
+                id="mapHeading"
+                class="mt-1 text-xl font-bold tracking-[-0.025em]"
+              >
+                Weather Map
+              </h2>
+            </div>
+
+            <div
+              class="overflow-hidden rounded-xl border border-outline-variant/30 bg-surface-container shadow-card"
+            >
+              <div
+                id="weatherMap"
+                class="weather-map"
+                role="region"
+                aria-label="Map showing the selected weather location"
+                tabindex="0"
+              ></div>
+            </div>
+          </section>
+
+          <!-- Lower Grid -->
+
+          <div
+            class="grid gap-8 lg:grid-cols-2"
+          >
+            <!-- Daily Guide -->
+
+            <section
+              id="recommendationSection"
+              class="recommendation-section space-y-4"
+              aria-labelledby="recommendationHeading"
+              hidden
+            >
+              <div
+                class="flex items-center justify-between"
+              >
+                <div>
+                  <p
+                    class="text-[10px] font-extrabold uppercase tracking-[0.18em] text-outline"
+                  >
+                    Today
+                  </p>
+
+                  <h2
+                    id="recommendationHeading"
+                    class="mt-1 text-xl font-bold tracking-[-0.025em]"
+                  >
+                    Daily Guide
+                  </h2>
+                </div>
+
+                <button
+                  id="customizeRecommendationsBtn"
+                  class="flex items-center gap-1 rounded-lg px-3 py-2 text-xs font-bold text-primary transition hover:bg-primary/5"
+                  type="button"
+                  aria-expanded="false"
+                  aria-controls="recommendationSettings"
+                >
+                  <span
+                    class="material-symbols-outlined text-[17px]"
+                  >
+                    settings
+                  </span>
+
+                  <span>
+                    Customize
+                  </span>
+                </button>
+              </div>
+
+              <div
+                id="recommendationSettings"
+                class="recommendation-settings rounded-xl border border-outline-variant/30 bg-surface-container-lowest p-5 shadow-card"
+                hidden
+              >
+                <div
+                  class="mb-5 flex items-start justify-between gap-4"
+                >
+                  <div>
+                    <h3
+                      class="font-bold"
+                    >
+                      Customize Recommendations
+                    </h3>
+
+                    <p
+                      class="mt-1 text-xs leading-5 text-on-surface-variant"
+                    >
+                      Choose which recommendations you want to see.
+                    </p>
+                  </div>
+
+                  <button
+                    id="resetRecommendationsBtn"
+                    class="text-xs font-bold text-primary"
+                    type="button"
+                  >
+                    Reset
+                  </button>
+                </div>
+
+                <div
+                  class="recommendation-options grid gap-3 sm:grid-cols-2"
+                >
+                  <label
+                    class="flex cursor-pointer items-center justify-between rounded-lg bg-surface-container-low px-4 py-3 text-sm font-semibold"
+                  >
+                    <span>
+                      Clothing
+                    </span>
+
+                    <input
+                      class="rounded border-outline-variant text-primary focus:ring-primary"
+                      type="checkbox"
+                      data-recommendation-preference="clothing"
+                    />
+                  </label>
+
+                  <label
+                    class="flex cursor-pointer items-center justify-between rounded-lg bg-surface-container-low px-4 py-3 text-sm font-semibold"
+                  >
+                    <span>
+                      Umbrella
+                    </span>
+
+                    <input
+                      class="rounded border-outline-variant text-primary focus:ring-primary"
+                      type="checkbox"
+                      data-recommendation-preference="umbrella"
+                    />
+                  </label>
+
+                  <label
+                    class="flex cursor-pointer items-center justify-between rounded-lg bg-surface-container-low px-4 py-3 text-sm font-semibold"
+                  >
+                    <span>
+                      Pet Walk
+                    </span>
+
+                    <input
+                      class="rounded border-outline-variant text-primary focus:ring-primary"
+                      type="checkbox"
+                      data-recommendation-preference="petWalk"
+                    />
+                  </label>
+
+                  <label
+                    class="flex cursor-pointer items-center justify-between rounded-lg bg-surface-container-low px-4 py-3 text-sm font-semibold"
+                  >
+                    <span>
+                      Activity
+                    </span>
+
+                    <input
+                      class="rounded border-outline-variant text-primary focus:ring-primary"
+                      type="checkbox"
+                      data-recommendation-preference="activity"
+                    />
+                  </label>
+
+                  <label
+                    class="flex cursor-pointer items-center justify-between rounded-lg bg-surface-container-low px-4 py-3 text-sm font-semibold"
+                  >
+                    <span>
+                      UV Index
+                    </span>
+
+                    <input
+                      class="rounded border-outline-variant text-primary focus:ring-primary"
+                      type="checkbox"
+                      data-recommendation-preference="uvIndex"
+                    />
+                  </label>
+
+                  <label
+                    class="flex cursor-pointer items-center justify-between rounded-lg bg-surface-container-low px-4 py-3 text-sm font-semibold"
+                  >
+                    <span>
+                      Hydration
+                    </span>
+
+                    <input
+                      class="rounded border-outline-variant text-primary focus:ring-primary"
+                      type="checkbox"
+                      data-recommendation-preference="hydration"
+                    />
+                  </label>
+
+                  <label
+                    class="flex cursor-pointer items-center justify-between rounded-lg bg-surface-container-low px-4 py-3 text-sm font-semibold"
+                  >
+                    <span>
+                      Car Wash
+                    </span>
+
+                    <input
+                      class="rounded border-outline-variant text-primary focus:ring-primary"
+                      type="checkbox"
+                      data-recommendation-preference="carWash"
+                    />
+                  </label>
+
+                  <label
+                    class="flex cursor-pointer items-center justify-between rounded-lg bg-surface-container-low px-4 py-3 text-sm font-semibold"
+                  >
+                    <span>
+                      Ventilation
+                    </span>
+
+                    <input
+                      class="rounded border-outline-variant text-primary focus:ring-primary"
+                      type="checkbox"
+                      data-recommendation-preference="ventilation"
+                    />
+                  </label>
+                </div>
+              </div>
+
+              <div
+                id="recommendationGrid"
+                class="recommendation-grid grid grid-cols-1 gap-3 sm:grid-cols-2"
+              ></div>
+            </section>
+
+            <!-- Saved Cities -->
+
+            <div
+              class="space-y-8"
+            >
+              <section
+                id="recentSection"
+                class="recent-section space-y-4"
+                aria-labelledby="recentHeading"
+              >
+                <div
+                  class="flex items-center justify-between"
+                >
+                  <h2
+                    id="recentHeading"
+                    class="text-xl font-bold tracking-[-0.025em]"
+                  >
+                    Recent Cities
+                  </h2>
+
+                  <button
+                    id="clearRecentBtn"
+                    class="text-xs font-bold text-error transition hover:opacity-70"
+                    type="button"
+                    aria-label="Clear all recent city searches"
+                    hidden
+                  >
+                    Clear All
+                  </button>
+                </div>
+
+                <p
+                  id="recentEmpty"
+                  class="recent-empty rounded-xl border border-dashed border-outline-variant/50 bg-surface-container-low px-5 py-6 text-center text-sm text-outline"
+                >
+                  No recent searches.
+                </p>
+
+                <ul
+                  id="recentList"
+                  class="recent-list space-y-2"
+                ></ul>
+              </section>
+            </div>
+          </div>
+
+          <!-- Footer -->
+
+          <footer
+            class="flex flex-col items-center justify-between gap-5 border-t border-outline-variant/20 pt-10 text-center text-xs text-on-surface-variant md:flex-row md:text-left"
+          >
+            <div
+              class="flex flex-wrap justify-center gap-5 md:justify-start"
+            >
+              <span>
+                © 2026 WeatherScope
+              </span>
+
+              <a
+                class="transition hover:text-primary"
+                href="#"
+              >
+                Privacy
+              </a>
+
+              <a
+                class="transition hover:text-primary"
+                href="#"
+              >
+                Terms
+              </a>
+            </div>
+
+            <p>
+              Powered by
+
+              <a
+                class="font-bold text-on-surface transition hover:text-primary"
+                href="https://openweathermap.org/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                OpenWeather API
+              </a>
+
+              and
+
+              <a
+                class="font-bold text-on-surface transition hover:text-primary"
+                href="https://www.openstreetmap.org/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                OpenStreetMap
+              </a>
+            </p>
+
+            <div
+              class="flex items-center gap-2"
+            >
+              <button
+                id="shareWeatherBtn"
+                class="rounded-full p-2 transition hover:bg-surface-container-high"
+                type="button"
+                aria-label="Share current weather"
+                hidden
+              >
+                <span
+                  class="material-symbols-outlined text-[20px]"
+                >
+                  share
+                </span>
+              </button>
+
+              <button
+                id="installAppBtn"
+                class="rounded-full p-2 transition hover:bg-surface-container-high"
+                type="button"
+                aria-label="Install WeatherScope app"
+                hidden
+              >
+                <span
+                  class="material-symbols-outlined text-[20px]"
+                >
+                  install_desktop
+                </span>
+              </button>
+            </div>
+          </footer>
         </div>
+      </main>
 
-        <p
-          id="recentEmpty"
-          class="recent-empty"
+      <!-- Mobile Navigation -->
+
+      <nav
+        class="fixed bottom-0 left-0 right-0 z-50 flex items-center justify-around border-t border-outline-variant/20 bg-surface/90 px-5 py-2 pb-[calc(0.5rem+env(safe-area-inset-bottom))] backdrop-blur-xl md:hidden"
+        aria-label="Mobile navigation"
+      >
+        <a
+          class="flex flex-col items-center gap-0.5 text-primary"
+          href="#dashboard"
         >
-          No recent searches.
-        </p>
-
-        <ul
-          id="recentList"
-          class="recent-list"
-        ></ul>
-      </section>
-
-      <!-- ================= FOOTER ================= -->
-
-      <footer>
-        <small>
-          Powered by
-
-          <a
-            href="https://openweathermap.org/"
-            target="_blank"
-            rel="noopener noreferrer"
+          <span
+            class="material-symbols-outlined text-[22px]"
+            style="
+              font-variation-settings:
+                'FILL' 1,
+                'wght' 500,
+                'GRAD' 0,
+                'opsz' 24;
+            "
           >
-            OpenWeather API
-          </a>
+            dashboard
+          </span>
 
-          and
-
-          <a
-            href="https://www.openstreetmap.org/"
-            target="_blank"
-            rel="noopener noreferrer"
+          <span
+            class="text-[9px] font-bold uppercase"
           >
-            OpenStreetMap
-          </a>
-        </small>
-      </footer>
-    </main>
+            Home
+          </span>
+        </a>
+
+        <a
+          class="flex flex-col items-center gap-0.5 text-on-surface-variant"
+          href="#mapSection"
+        >
+          <span
+            class="material-symbols-outlined text-[22px]"
+          >
+            map
+          </span>
+
+          <span
+            class="text-[9px] font-bold uppercase"
+          >
+            Maps
+          </span>
+        </a>
+
+        <a
+          class="flex flex-col items-center gap-0.5 text-on-surface-variant"
+          href="/favorites.html"
+        >
+          <span
+            class="material-symbols-outlined text-[22px]"
+          >
+            star
+          </span>
+
+          <span
+            class="text-[9px] font-bold uppercase"
+          >
+            Saved
+          </span>
+        </a>
+
+        <button
+          class="flex flex-col items-center gap-0.5 text-on-surface-variant"
+          type="button"
+          onclick="document.getElementById('themeBtn').click()"
+        >
+          <span
+            class="material-symbols-outlined text-[22px]"
+          >
+            settings
+          </span>
+
+          <span
+            class="text-[9px] font-bold uppercase"
+          >
+            Settings
+          </span>
+        </button>
+      </nav>
+    </div>
 
     <script
       src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
@@ -572,7 +1272,7 @@
 
     <script
       type="module"
-      src="js/main.js"
+      src="/js/main.js"
     ></script>
   </body>
 </html>

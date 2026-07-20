@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+
+    <title>WeatherScope | Favorites</title>
+
+    <link
+      rel="icon"
+      type="image/jpeg"
+      href="/images/favicon.jpeg"
+    />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+
+        theme: {
+          extend: {
+            colors: {
+              background: "#f9f9ff",
+              surface: "#f9f9ff",
+
+              "surface-container-low":
+                "#f1f3ff",
+
+              "surface-container-lowest":
+                "#ffffff",
+
+              "surface-container-high":
+                "#e1e8ff",
+
+              primary: "#3567e9",
+
+              "primary-fixed":
+                "#dbe1ff",
+
+              "on-primary":
+                "#ffffff",
+
+              "on-surface":
+                "#121b2e",
+
+              "on-surface-variant":
+                "#434654",
+
+              outline: "#737686",
+
+              "outline-variant":
+                "#c3c5d7",
+
+              secondary: "#7a5900",
+
+              tertiary: "#00653a",
+
+              "tertiary-fixed":
+                "#7afbae",
+
+              error: "#ba1a1a",
+            },
+
+            fontFamily: {
+              inter: [
+                "Inter",
+                "sans-serif",
+              ],
+            },
+
+            boxShadow: {
+              card:
+                "0 8px 32px rgba(31, 38, 135, 0.07)",
+
+              elevated:
+                "0 24px 48px -12px rgba(31, 38, 135, 0.12)",
+            },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      .material-symbols-outlined {
+        font-variation-settings:
+          "FILL" 0,
+          "wght" 400,
+          "GRAD" 0,
+          "opsz" 24;
+      }
+
+      .favorites-active-icon {
+        font-variation-settings:
+          "FILL" 1,
+          "wght" 500,
+          "GRAD" 0,
+          "opsz" 24;
+      }
+
+      .crystalline-card {
+        background:
+          rgba(
+            255,
+            255,
+            255,
+            0.72
+          );
+
+        backdrop-filter:
+          blur(18px);
+
+        -webkit-backdrop-filter:
+          blur(18px);
+
+        border:
+          1px solid
+          rgba(
+            255,
+            255,
+            255,
+            0.65
+          );
+
+        box-shadow:
+          0 8px 32px
+          rgba(
+            31,
+            38,
+            135,
+            0.07
+          );
+      }
+
+      .card-hover {
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    background 0.3s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-6px);
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow:
+    0 24px 48px -12px
+    rgba(31, 38, 135, 0.15);
+}
+
+      .sky-background {
+        background:
+          radial-gradient(
+            circle at 35% 5%,
+            rgba(
+              219,
+              225,
+              255,
+              0.7
+            ),
+            transparent 35%
+          ),
+          linear-gradient(
+            135deg,
+            #f1f3ff 0%,
+            #f9f9ff 45%,
+            #ffffff 100%
+          );
+      }
+    </style>
+
+    <link
+      rel="stylesheet"
+      href="/css/style.css"
+    />
+  </head>
+
+  <body
+    class="min-h-screen bg-background font-inter text-on-surface antialiased"
+  >
+    <!-- Desktop Sidebar -->
+
+    <aside
+      class="fixed left-0 top-0 z-40 hidden h-screen w-64 flex-col border-r border-outline-variant/15 bg-white/80 px-4 py-6 backdrop-blur-xl md:flex"
+    >
+      <div class="px-3">
+        <a
+          href="/index.html"
+          class="text-[27px] font-black tracking-[-0.05em] text-primary"
+        >
+          WeatherScope
+        </a>
+
+        <p
+          class="mt-1 text-[10px] font-extrabold uppercase tracking-[0.16em] text-outline"
+        >
+          Atmospheric Precision
+        </p>
+      </div>
+
+      <nav
+        class="mt-10 flex-1 space-y-1"
+      >
+        <a
+          href="/index.html"
+          class="flex items-center gap-4 rounded-xl px-4 py-3 text-sm font-bold text-on-surface-variant transition hover:bg-primary/5 hover:text-primary"
+        >
+          <span
+            class="material-symbols-outlined text-[20px]"
+          >
+            dashboard
+          </span>
+
+          Dashboard
+        </a>
+
+        <a
+          href="/index.html#map"
+          class="flex items-center gap-4 rounded-xl px-4 py-3 text-sm font-bold text-on-surface-variant transition hover:bg-primary/5 hover:text-primary"
+        >
+          <span
+            class="material-symbols-outlined text-[20px]"
+          >
+            map
+          </span>
+
+          Maps
+        </a>
+
+        <a
+          href="/index.html#air-quality"
+          class="flex items-center gap-4 rounded-xl px-4 py-3 text-sm font-bold text-on-surface-variant transition hover:bg-primary/5 hover:text-primary"
+        >
+          <span
+            class="material-symbols-outlined text-[20px]"
+          >
+            air
+          </span>
+
+          Air Quality
+        </a>
+
+        <a
+          href="/favorites.html"
+          class="flex items-center gap-4 rounded-xl bg-primary/10 px-4 py-3 text-sm font-extrabold text-primary"
+        >
+          <span
+            class="material-symbols-outlined favorites-active-icon text-[20px]"
+          >
+            star
+          </span>
+
+          Favorites
+        </a>
+      </nav>
+
+      <div
+        class="border-t border-outline-variant/20 pt-5"
+      >
+        <button
+          type="button"
+          class="flex w-full items-center gap-4 rounded-xl px-4 py-3 text-sm font-bold text-on-surface-variant transition hover:bg-primary/5"
+        >
+          <span
+            class="material-symbols-outlined text-[20px]"
+          >
+            settings
+          </span>
+
+          Settings
+        </button>
+
+        <div
+          class="mt-4 rounded-2xl border border-primary/10 bg-primary-fixed/45 p-4"
+        >
+          <p
+            class="text-[9px] font-extrabold uppercase tracking-[0.14em] text-primary"
+          >
+            Pro Plan
+          </p>
+
+          <p
+            class="mt-2 text-[11px] leading-relaxed text-on-surface-variant"
+          >
+            Unlock hyper-local
+            forecasts and advanced
+            weather maps.
+          </p>
+
+          <button
+            type="button"
+            class="mt-4 w-full rounded-lg bg-primary py-2 text-xs font-extrabold text-white transition hover:opacity-90"
+          >
+            Upgrade Pro
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Mobile Header -->
+
+    <header
+      class="fixed left-0 top-0 z-50 w-full border-b border-outline-variant/15 bg-white/85 backdrop-blur-xl md:hidden"
+    >
+      <div
+        class="flex h-16 items-center justify-between px-5"
+      >
+        <a
+          href="/index.html"
+          class="text-xl font-black tracking-[-0.04em] text-primary"
+        >
+          WeatherScope
+        </a>
+
+        <a
+          href="/index.html"
+          class="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary"
+          aria-label="Back to dashboard"
+        >
+          <span
+            class="material-symbols-outlined"
+          >
+            close
+          </span>
+        </a>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+
+    <main
+      class="sky-background min-h-screen px-5 pb-28 pt-24 md:ml-64 md:px-10 md:pb-16 md:pt-10"
+    >
+      <div
+        class="mx-auto max-w-[960px]"
+      >
+        <!-- Page Header -->
+
+        <header
+          class="mb-9 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between"
+        >
+          <div>
+            <p
+              class="text-[11px] font-extrabold uppercase tracking-[0.18em] text-primary"
+            >
+              Saved Locations
+            </p>
+
+            <h1
+              class="mt-2 text-4xl font-black tracking-[-0.055em] text-on-surface md:text-5xl"
+            >
+              Your Favorites
+            </h1>
+
+            <p
+              class="mt-3 max-w-lg text-sm leading-6 text-on-surface-variant"
+            >
+              Compare your saved
+              cities and quickly open
+              their full weather
+              dashboard.
+            </p>
+          </div>
+
+          <div
+            class="flex items-center gap-3"
+          >
+            <a
+              href="/index.html"
+              class="inline-flex items-center gap-2 rounded-full border border-outline-variant/30 bg-white/70 px-5 py-3 text-sm font-extrabold text-on-surface shadow-sm transition hover:bg-white hover:shadow-card"
+            >
+              <span
+                class="material-symbols-outlined text-[18px]"
+              >
+                add
+              </span>
+
+              Add City
+            </a>
+
+            <a
+              href="/index.html"
+              class="flex h-12 w-12 items-center justify-center rounded-full bg-primary text-white shadow-lg transition hover:scale-105"
+              aria-label="Use current location"
+            >
+              <span
+                class="material-symbols-outlined"
+              >
+                my_location
+              </span>
+            </a>
+          </div>
+        </header>
+
+        <!-- Empty State -->
+
+        <div
+          id="favoriteEmpty"
+          hidden
+          class="crystalline-card rounded-[32px] border-2 border-dashed border-outline-variant/30 px-6 py-16 text-center"
+        >
+          <div
+            class="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-white text-primary shadow-sm"
+          >
+            <span
+              class="material-symbols-outlined text-[36px]"
+            >
+              add_location
+            </span>
+          </div>
+
+          <h2
+            class="mt-6 text-xl font-extrabold"
+          >
+            No favorite cities yet
+          </h2>
+
+          <p
+            class="mx-auto mt-2 max-w-sm text-sm leading-6 text-on-surface-variant"
+          >
+            Open the dashboard,
+            search for a city and
+            select the star icon to
+            save it here.
+          </p>
+
+          <a
+            href="/index.html"
+            class="mt-6 inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-extrabold text-white"
+          >
+            <span
+              class="material-symbols-outlined text-[18px]"
+            >
+              search
+            </span>
+
+            Find a City
+          </a>
+        </div>
+
+        <!-- Dynamic Favorite Cards -->
+
+        <div
+          id="favoriteList"
+          class="grid grid-cols-1 gap-4 md:grid-cols-2"
+        ></div>
+
+        <!-- Weekly Overview is inserted
+             here dynamically by favorites.js -->
+      </div>
+    </main>
+
+    <!-- Mobile Bottom Navigation -->
+
+    <nav
+      class="fixed bottom-0 left-0 z-50 flex h-16 w-full items-center justify-around border-t border-outline-variant/15 bg-white/95 backdrop-blur-xl md:hidden"
+    >
+      <a
+        href="/index.html"
+        class="flex flex-col items-center gap-1 text-outline"
+      >
+        <span
+          class="material-symbols-outlined text-[22px]"
+        >
+          dashboard
+        </span>
+
+        <span
+          class="text-[10px] font-bold"
+        >
+          Home
+        </span>
+      </a>
+
+      <a
+        href="/index.html#map"
+        class="flex flex-col items-center gap-1 text-outline"
+      >
+        <span
+          class="material-symbols-outlined text-[22px]"
+        >
+          map
+        </span>
+
+        <span
+          class="text-[10px] font-bold"
+        >
+          Maps
+        </span>
+      </a>
+
+      <a
+        href="/favorites.html"
+        class="flex flex-col items-center gap-1 text-primary"
+      >
+        <span
+          class="material-symbols-outlined favorites-active-icon text-[22px]"
+        >
+          star
+        </span>
+
+        <span
+          class="text-[10px] font-extrabold"
+        >
+          Saved
+        </span>
+      </a>
+
+      <button
+        type="button"
+        class="flex flex-col items-center gap-1 text-outline"
+      >
+        <span
+          class="material-symbols-outlined text-[22px]"
+        >
+          settings
+        </span>
+
+        <span
+          class="text-[10px] font-bold"
+        >
+          Settings
+        </span>
+      </button>
+    </nav>
+
+    <script
+      type="module"
+      src="/js/favorites.js"
+    ></script>
+  </body>
+</html>
