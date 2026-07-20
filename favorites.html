@@ -194,122 +194,133 @@
     <!-- Desktop Sidebar -->
 
     <aside
-      class="fixed left-0 top-0 z-40 hidden h-screen w-64 flex-col border-r border-outline-variant/15 bg-white/80 px-4 py-6 backdrop-blur-xl md:flex"
-    >
-      <div class="px-3">
-        <a
-          href="/index.html"
-          class="text-[27px] font-black tracking-[-0.05em] text-primary"
-        >
-          WeatherScope
-        </a>
-
-        <p
-          class="mt-1 text-[10px] font-extrabold uppercase tracking-[0.16em] text-outline"
-        >
-          Atmospheric Precision
-        </p>
-      </div>
-
-      <nav
-        class="mt-10 flex-1 space-y-1"
-      >
-        <a
-          href="/index.html"
-          class="flex items-center gap-4 rounded-xl px-4 py-3 text-sm font-bold text-on-surface-variant transition hover:bg-primary/5 hover:text-primary"
-        >
-          <span
-            class="material-symbols-outlined text-[20px]"
-          >
-            dashboard
-          </span>
-
-          Dashboard
-        </a>
-
-        <a
-          href="/index.html#map"
-          class="flex items-center gap-4 rounded-xl px-4 py-3 text-sm font-bold text-on-surface-variant transition hover:bg-primary/5 hover:text-primary"
-        >
-          <span
-            class="material-symbols-outlined text-[20px]"
-          >
-            map
-          </span>
-
-          Maps
-        </a>
-
-        <a
-          href="/index.html#air-quality"
-          class="flex items-center gap-4 rounded-xl px-4 py-3 text-sm font-bold text-on-surface-variant transition hover:bg-primary/5 hover:text-primary"
-        >
-          <span
-            class="material-symbols-outlined text-[20px]"
-          >
-            air
-          </span>
-
-          Air Quality
-        </a>
-
-        <a
-          href="/favorites.html"
-          class="flex items-center gap-4 rounded-xl bg-primary/10 px-4 py-3 text-sm font-extrabold text-primary"
-        >
-          <span
-            class="material-symbols-outlined favorites-active-icon text-[20px]"
-          >
-            star
-          </span>
-
-          Favorites
-        </a>
-      </nav>
-
-      <div
-        class="border-t border-outline-variant/20 pt-5"
+        class="fixed bottom-0 left-0 top-0 z-[60] hidden w-64 flex-col border-r border-outline-variant/30 bg-surface-container-low p-6 md:flex"
       >
         <button
+          id="homeButton"
+          class="mb-10 block text-left"
           type="button"
-          class="flex w-full items-center gap-4 rounded-xl px-4 py-3 text-sm font-bold text-on-surface-variant transition hover:bg-primary/5"
+          aria-label="Return to WeatherScope home"
         >
           <span
-            class="material-symbols-outlined text-[20px]"
+            class="block text-[27px] font-extrabold leading-tight tracking-[-0.04em] text-primary"
           >
-            settings
+            WeatherScope
           </span>
 
-          Settings
+          <span
+            class="mt-1 block text-[10px] font-extrabold uppercase tracking-[0.22em] text-outline"
+          >
+            Crystalline Insights
+          </span>
         </button>
 
-        <div
-          class="mt-4 rounded-2xl border border-primary/10 bg-primary-fixed/45 p-4"
+        <nav
+          class="flex-1 space-y-1"
+          aria-label="Main navigation"
         >
-          <p
-            class="text-[9px] font-extrabold uppercase tracking-[0.14em] text-primary"
-          >
-            Pro Plan
-          </p>
+          <a
+  class="sidebar-link flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-bold transition"
+  href="/index.html#dashboard"
+>
+            <span
+              class="material-symbols-outlined"
+            >
+              dashboard
+            </span>
 
-          <p
-            class="mt-2 text-[11px] leading-relaxed text-on-surface-variant"
-          >
-            Unlock hyper-local
-            forecasts and advanced
-            weather maps.
-          </p>
+            <span>
+              Dashboard
+            </span>
+          </a>
 
+          <a
+            class="sidebar-link flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium text-on-surface-variant transition hover:bg-surface-container-high"
+            href="#mapSection"
+          >
+            <span
+              class="material-symbols-outlined"
+            >
+              map
+            </span>
+
+            <span>
+              Maps
+            </span>
+          </a>
+
+          <a
+            class="sidebar-link flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium text-on-surface-variant transition hover:bg-surface-container-high"
+            href="#resultSection"
+          >
+            <span
+              class="material-symbols-outlined"
+            >
+              air
+            </span>
+
+            <span>
+              Air Quality
+            </span>
+          </a>
+
+          <a
+  class="sidebar-link active flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-bold transition"
+  href="/favorites.html"
+>
+  <span class="material-symbols-outlined">
+    star
+  </span>
+
+  <span>
+    Favorites
+  </span>
+</a>
+        </nav>
+
+        <div
+          class="mt-auto space-y-1 border-t border-outline-variant/20 pt-6"
+        >
           <button
+            class="mb-4 w-full rounded-lg bg-primary px-4 py-3 text-sm font-extrabold text-on-primary shadow-sm transition hover:opacity-90"
             type="button"
-            class="mt-4 w-full rounded-lg bg-primary py-2 text-xs font-extrabold text-white transition hover:opacity-90"
           >
             Upgrade Pro
           </button>
-        </div>
-      </div>
-    </aside>
 
+          <button
+            id="themeBtn"
+            class="flex w-full items-center gap-3 rounded-lg px-4 py-2 text-left text-[13px] text-on-surface-variant transition hover:bg-surface-container-high"
+            type="button"
+            aria-label="Toggle color theme"
+          >
+            <span
+              class="material-symbols-outlined text-[20px]"
+            >
+              dark_mode
+            </span>
+
+            <span>
+              Theme
+            </span>
+          </button>
+
+          <a
+            class="flex items-center gap-3 rounded-lg px-4 py-2 text-[13px] text-on-surface-variant transition hover:bg-surface-container-high"
+            href="#"
+          >
+            <span
+              class="material-symbols-outlined text-[20px]"
+            >
+              help
+            </span>
+
+            <span>
+              Help
+            </span>
+          </a>
+        </div>
+      </aside>
     <!-- Mobile Header -->
 
     <header
