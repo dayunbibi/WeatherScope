@@ -527,14 +527,9 @@ export function renderWeather(
 </div>
 
             <!-- FAVORITE BUTTON -->
-            <button
-              id="favoriteCurrentBtn"
-              class="${
-  isFavorite
-    ? "text-amber-500"
-    : "text-outline"
-} flex h-7 w-7 items-center justify-center transition-all duration-200 hover:text-amber-500 hover:scale-110"
-              type="button"
+           <button
+  id="favoriteCurrentBtn"
+  class="flex h-7 w-7 items-center justify-center text-on-surface transition-all duration-200 hover:scale-110"
               aria-label="${
                 isFavorite
                   ? "Remove from favourites"

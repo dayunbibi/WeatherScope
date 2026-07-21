@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#3567e9" />
+    <title>WeatherScope | Interactive Maps</title>
+
+    <link rel="icon" type="image/jpeg" href="/images/favicon.jpeg" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+    <link rel="stylesheet" href="/css/style.css" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              background: "#f9f9ff",
+              surface: "#f9f9ff",
+              "surface-container-low": "#f1f3ff",
+              "surface-container": "#e9edff",
+              "surface-container-high": "#e1e8ff",
+              "surface-container-highest": "#d9e2fc",
+              "surface-container-lowest": "#ffffff",
+              primary: "#3567e9",
+              "primary-container": "#3567e9",
+              "on-primary": "#ffffff",
+              "on-surface": "#121b2e",
+              "on-surface-variant": "#434654",
+              outline: "#737686",
+              "outline-variant": "#c3c5d7",
+              tertiary: "#00653a",
+              "tertiary-fixed": "#7afbae",
+              "on-tertiary-fixed-variant": "#00522e",
+              error: "#ba1a1a"
+            },
+            fontFamily: { inter: ["Inter", "sans-serif"] },
+            boxShadow: {
+              card: "0 8px 28px rgba(31, 38, 135, 0.08)",
+              floating: "0 18px 50px rgba(31, 38, 135, 0.16)"
+            }
+          }
+        }
+      };
+    </script>
+
+    <style>
+      html, body { margin: 0; min-height: 100%; font-family: Inter, sans-serif; }
+      body { overflow: hidden; }
+      [hidden] { display: none !important; }
+      .material-symbols-outlined { font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24; }
+      .glass-panel { background: rgba(255,255,255,.82); border: 1px solid rgba(255,255,255,.72); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+      .dark .glass-panel { background: rgba(28,38,58,.86); border-color: rgba(255,255,255,.08); }
+      #interactiveMap { width: 100%; height: 100%; background: #d1daf4; }
+      .leaflet-control-attribution { font-size: 9px; }
+      .leaflet-popup-content-wrapper { border-radius: 16px; box-shadow: 0 18px 50px rgba(18,27,46,.18); }
+      .leaflet-popup-content { margin: 0; }
+      .layer-btn.active { background: #3567e9; color: white; box-shadow: 0 8px 20px rgba(53,103,233,.28); }
+      .sidebar-link.active { color: #3567e9; background: rgba(53,103,233,.1); }
+      .autocomplete-panel { position: absolute; top: calc(100% + 8px); left: 0; right: 0; z-index: 1000; max-height: 280px; overflow-y: auto; border: 1px solid rgba(195,197,215,.6); border-radius: 12px; background: white; box-shadow: 0 18px 50px rgba(18,27,46,.14); }
+      .autocomplete-panel button { width: 100%; padding: 12px 14px; text-align: left; border: 0; background: transparent; cursor: pointer; }
+      .autocomplete-panel button:hover { background: #f1f3ff; }
+      input[type="range"] { accent-color: #3567e9; }
+      @media (max-width: 767px) {
+        body { overflow: auto; }
+        .map-shell { height: calc(100vh - 64px - 70px); min-height: 620px; }
+        .desktop-side { display: none; }
+        .timeline-panel { left: 22px !important; right: 22px !important; bottom: 26px !important; width: auto !important; transform: none !important; }
+        .legend-panel { display: none; }
+        .layers-panel { top: 22px !important; left: 22px !important; }
+      }
+    </style>
+  </head>
+
+  <body class="bg-background font-inter text-on-surface antialiased">
+    <header class="fixed left-0 right-0 top-0 z-50 h-16 border-b border-outline-variant/20 bg-surface/85 backdrop-blur-xl md:left-64">
+      <div class="mx-auto flex h-full max-w-[1100px] items-center justify-between gap-4 px-5 md:px-10">
+        <a class="text-xl font-extrabold tracking-[-0.04em] text-primary md:hidden" href="/index.html">WS</a>
+
+        <form id="mapSearchForm" class="relative w-full max-w-md">
+          <span class="material-symbols-outlined pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-outline">search</span>
+          <input id="mapCityInput" class="h-11 w-full rounded-lg border border-outline-variant/40 bg-surface-container-low pl-12 pr-4 text-sm font-semibold outline-none transition focus:border-primary focus:ring-4 focus:ring-primary/10" placeholder="Search cities or coordinates..." autocomplete="off" />
+          <div id="mapSuggestions" class="autocomplete-panel" hidden></div>
+        </form>
+
+        <div class="flex items-center gap-2">
+          <button id="mapLocationBtn" class="rounded-full p-2 text-on-surface-variant transition hover:bg-surface-container-high" type="button" aria-label="Use my location"><span class="material-symbols-outlined">my_location</span></button>
+          <button id="themeBtn" class="rounded-full p-2 text-on-surface-variant transition hover:bg-surface-container-high" type="button" aria-label="Toggle theme"><span class="material-symbols-outlined">dark_mode</span></button>
+        </div>
+      </div>
+    </header>
+
+    <aside class="desktop-side fixed bottom-0 left-0 top-0 z-[60] flex w-64 flex-col border-r border-outline-variant/30 bg-surface-container-low p-6">
+      <a class="mb-10 block" href="/index.html">
+        <span class="block text-[27px] font-extrabold tracking-[-0.04em] text-primary">WeatherScope</span>
+        <span class="mt-1 block text-[10px] font-extrabold uppercase tracking-[0.22em] text-outline">Crystalline Insights</span>
+      </a>
+
+      <nav class="flex-1 space-y-1">
+        <a class="sidebar-link flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium text-on-surface-variant hover:bg-surface-container-high" href="/index.html"><span class="material-symbols-outlined">dashboard</span><span>Dashboard</span></a>
+        <a class="sidebar-link active flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-bold" href="/maps.html"><span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">map</span><span>Maps</span></a>
+        <a class="sidebar-link flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium text-on-surface-variant hover:bg-surface-container-high" href="/air-quality.html"><span class="material-symbols-outlined">air</span><span>Air Quality</span></a>
+        <a class="sidebar-link flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium text-on-surface-variant hover:bg-surface-container-high" href="/favorites.html"><span class="material-symbols-outlined">star</span><span>Favorites</span></a>
+      </nav>
+
+      <div class="mt-auto space-y-2 border-t border-outline-variant/20 pt-6">
+        <button class="w-full rounded-lg bg-primary px-4 py-3 text-sm font-extrabold text-white">Upgrade Pro</button>
+        <a class="flex items-center gap-3 rounded-lg px-4 py-2 text-[13px] text-on-surface-variant hover:bg-surface-container-high" href="/help.html"><span class="material-symbols-outlined text-[20px]">help</span><span>Help</span></a>
+      </div>
+    </aside>
+
+    <main class="map-shell fixed bottom-0 left-0 right-0 top-16 bg-background md:left-64">
+      <div class="absolute inset-4 overflow-hidden rounded-lg border border-outline-variant/25 bg-surface-container-lowest shadow-card md:inset-6">
+        <div id="interactiveMap"></div>
+      </div>
+
+      <div class="layers-panel absolute left-8 top-8 z-[500]">
+        <div class="glass-panel rounded-lg p-2 shadow-floating">
+          <p class="px-2 py-1 text-[10px] font-extrabold uppercase tracking-wider text-outline">Layers</p>
+          <div class="space-y-1">
+            <button class="layer-btn active flex h-12 w-12 items-center justify-center rounded-lg text-primary transition" data-layer="temp_new" data-label="Temperature"><span class="material-symbols-outlined">thermostat</span></button>
+            <button class="layer-btn flex h-12 w-12 items-center justify-center rounded-lg text-primary transition hover:bg-primary/10" data-layer="precipitation_new" data-label="Precipitation"><span class="material-symbols-outlined">rainy</span></button>
+            <button class="layer-btn flex h-12 w-12 items-center justify-center rounded-lg text-primary transition hover:bg-primary/10" data-layer="wind_new" data-label="Wind Speed"><span class="material-symbols-outlined">air</span></button>
+            <button class="layer-btn flex h-12 w-12 items-center justify-center rounded-lg text-primary transition hover:bg-primary/10" data-layer="clouds_new" data-label="Cloud Cover"><span class="material-symbols-outlined">cloud</span></button>
+            <button class="layer-btn flex h-12 w-12 items-center justify-center rounded-lg text-primary transition hover:bg-primary/10" data-layer="pressure_new" data-label="Pressure"><span class="material-symbols-outlined">layers</span></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="legend-panel absolute right-8 top-8 z-[500] w-52">
+        <div class="glass-panel rounded-lg p-4 shadow-floating">
+          <p id="legendTitle" class="mb-3 text-[10px] font-extrabold uppercase tracking-wider text-outline">Legend: Temperature</p>
+          <div id="legendGradient" class="h-2 w-full rounded-full bg-gradient-to-r from-blue-600 via-green-400 to-red-600"></div>
+          <div id="legendLabels" class="mt-2 flex justify-between text-[10px] font-bold text-outline"><span>-10°</span><span>15°</span><span>40°</span></div>
+          <div class="mt-5 border-t border-outline-variant/20 pt-4">
+            <p class="mb-2 text-[10px] font-extrabold uppercase tracking-wider text-outline">Selected location</p>
+            <p id="selectedLocationText" class="text-sm font-bold">Search for a city</p>
+            <p id="selectedLayerText" class="mt-1 text-xs text-on-surface-variant">Temperature layer</p>
+          </div>
+        </div>
+      </div>
+
+      <div id="statusToast" class="glass-panel absolute left-1/2 top-8 z-[600] -translate-x-1/2 rounded-lg px-4 py-2 text-sm font-semibold shadow-floating" hidden></div>
+
+      <div class="timeline-panel absolute bottom-10 left-1/2 z-[500] w-[min(760px,calc(100%-48px))] -translate-x-1/2">
+        <div class="glass-panel rounded-lg p-5 shadow-floating">
+          <div class="flex items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+              <button id="playBtn" class="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-white shadow-lg transition hover:scale-105" type="button"><span class="material-symbols-outlined">play_arrow</span></button>
+              <div>
+                <h3 class="text-sm font-bold">Forecast View</h3>
+                <p id="timelineDescription" class="text-xs text-outline">Current weather layer</p>
+              </div>
+            </div>
+            <div class="text-right">
+              <span class="rounded-full border border-primary/20 bg-surface-container-high px-3 py-1 text-[10px] font-extrabold text-primary">LIVE</span>
+              <p id="currentMapTime" class="mt-1 text-xs font-bold text-outline">--:--</p>
+            </div>
+          </div>
+          <div class="mt-4">
+            <input id="forecastSlider" class="h-1.5 w-full cursor-pointer appearance-none rounded-full bg-surface-container-highest" min="0" max="24" value="0" type="range" />
+            <div class="mt-2 flex justify-between text-[9px] font-bold text-outline"><span>NOW</span><span>+6H</span><span>+12H</span><span>+18H</span><span>+24H</span></div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <nav class="fixed bottom-0 left-0 right-0 z-[90] flex items-center justify-around border-t border-outline-variant/20 bg-surface/95 px-4 py-2 pb-[calc(.5rem+env(safe-area-inset-bottom))] backdrop-blur-xl md:hidden">
+      <a class="flex flex-col items-center gap-0.5 text-on-surface-variant" href="/index.html"><span class="material-symbols-outlined">dashboard</span><span class="text-[9px] font-bold uppercase">Home</span></a>
+      <a class="flex flex-col items-center gap-0.5 text-primary" href="/maps.html"><span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">map</span><span class="text-[9px] font-bold uppercase">Maps</span></a>
+      <a class="flex flex-col items-center gap-0.5 text-on-surface-variant" href="/air-quality.html"><span class="material-symbols-outlined">air</span><span class="text-[9px] font-bold uppercase">Air</span></a>
+      <a class="flex flex-col items-center gap-0.5 text-on-surface-variant" href="/favorites.html"><span class="material-symbols-outlined">star</span><span class="text-[9px] font-bold uppercase">Saved</span></a>
+    </nav>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+    <script type="module" src="/js/maps.js"></script>
+  </body>
+</html>

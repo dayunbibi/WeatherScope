@@ -4,6 +4,7 @@ import {
 
 import {
   formatTemperature,
+  getWeatherIconName,
 } from "./models.js";
 
 import {
@@ -405,8 +406,11 @@ function renderFavoriteCard(
     current?.weather?.[0] ??
     {};
 
-  const iconCode =
-    weather.icon ?? "";
+  const iconName =
+  getWeatherIconName(
+    weather.id,
+    weather.icon
+  );
 
   const description =
     weather.description ??
@@ -497,23 +501,20 @@ function renderFavoriteCard(
           </p>
         </div>
 
-        ${
-          iconCode
-            ? `
-              <img
-                src="https://openweathermap.org/img/wn/${iconCode}@2x.png"
-                alt="${description}"
-                class="h-14 w-14 flex-none object-contain"
-              />
-            `
-            : `
-              <span
-                class="material-symbols-outlined flex-none text-4xl text-primary"
-              >
-                partly_cloudy_day
-              </span>
-            `
-        }
+       <span
+  class="material-symbols-outlined flex-none text-[64px] text-primary/20"
+  role="img"
+  aria-label="${description}"
+  style="
+    font-variation-settings:
+      'FILL' 0,
+      'wght' 300,
+      'GRAD' 0,
+      'opsz' 48;
+  "
+>
+  ${iconName}
+</span>
       </div>
 
       <div

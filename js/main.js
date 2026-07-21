@@ -703,6 +703,17 @@ async function loadWeather(
         ),
     };
 
+    localStorage.setItem(
+  "weatherscope:selected-location",
+  JSON.stringify({
+    city: weather.city,
+    country: weather.country,
+    latitude: weather.latitude,
+    longitude: weather.longitude,
+    locationName: weather.locationName,
+  })
+);
+
     renderAllWeather();
 
     recentCities =
