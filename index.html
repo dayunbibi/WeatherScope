@@ -75,6 +75,8 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
     />
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 
     <script>
@@ -582,12 +584,48 @@
                 class="mx-1 hidden h-6 w-px bg-outline-variant/40 sm:block"
               ></div>
 
-              <div
-                class="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-xs font-extrabold text-white"
-                aria-label="User profile"
-              >
-                A
-              </div>
+             <div
+  id="authArea"
+  class="relative flex items-center"
+>
+  <!-- active logout-->
+
+  <a
+    id="loginLink"
+    href="/login.html"
+    class="rounded-lg bg-primary px-4 py-2 text-xs font-bold text-white transition hover:opacity-90"
+  >
+    Log In
+  </a>
+
+  <!-- active login -->
+
+  <div
+    id="userMenu"
+    class="hidden items-center gap-2"
+  >
+    <div
+      id="userAvatar"
+      class="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-xs font-extrabold text-white"
+      aria-label="User profile"
+    >
+      U
+    </div>
+
+    <span
+      id="userName"
+      class="hidden max-w-[120px] truncate text-xs font-semibold text-on-surface-variant sm:inline"
+    ></span>
+
+    <button
+      id="logoutButton"
+      class="rounded-lg px-3 py-2 text-xs font-bold text-on-surface-variant transition hover:bg-surface-container-high hover:text-primary"
+      type="button"
+    >
+      Log Out
+    </button>
+  </div>
+</div>
             </div>
           </div>
         </header>
@@ -600,7 +638,7 @@
 
           <section
             id="searchSection"
-            class="space-y-6 text-center"
+            class="relative z-[1000] space-y-6 text-center"
             aria-labelledby="searchHeading"
           >
             <div
@@ -1274,5 +1312,9 @@
       type="module"
       src="/js/main.js"
     ></script>
+    <script
+  type="module"
+  src="/js/auth-ui.js"
+></script>
   </body>
 </html>

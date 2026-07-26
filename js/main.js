@@ -860,31 +860,7 @@ elements.searchForm
     }
   );
 
-/* ================= GEOLOCATION ================= */
 
-const AUTO_LOCATION_KEY =
-  "weatherscope:auto-location-enabled";
-
-function hasEnabledAutomaticLocation() {
-  return (
-    localStorage.getItem(
-      AUTO_LOCATION_KEY
-    ) === "true"
-  );
-}
-
-function enableAutomaticLocation() {
-  localStorage.setItem(
-    AUTO_LOCATION_KEY,
-    "true"
-  );
-}
-
-function disableAutomaticLocation() {
-  localStorage.removeItem(
-    AUTO_LOCATION_KEY
-  );
-}
 
 function loadCurrentLocationWeather({
   automatic = false,
@@ -910,36 +886,18 @@ function loadCurrentLocationWeather({
   }
 
   navigator.geolocation.getCurrentPosition(
-    ({ coords }) => {
-      /*
-       * 사용자가 버튼을 눌러 위치 요청에 성공했으면,
-       * 다음 방문부터 자동으로 불러오도록 기억한다.
-       */
-      if (!automatic) {
-        enableAutomaticLocation();
-      }
-
-      loadWeather(
-        () =>
-          fetchWeatherDashboardByCoords(
-            coords.latitude,
-            coords.longitude
-          ),
-        "Weather loaded for your current location."
-      );
-    },
+  ({ coords }) => {
+    loadWeather(
+      () =>
+        fetchWeatherDashboardByCoords(
+          coords.latitude,
+          coords.longitude
+        ),
+      "Weather loaded for your current location."
+    );
+  },
 
     (error) => {
-      /*
-       * 권한이 취소되었거나 차단된 경우에는
-       * 다음 방문 자동 실행도 중단한다.
-       */
-      if (
-        error.code ===
-        error.PERMISSION_DENIED
-      ) {
-        disableAutomaticLocation();
-      }
 
       if (automatic) {
         console.info(
@@ -1472,56 +1430,38 @@ function registerServiceWorker() {
   ) {
     return;
   }
-
-  window.addEventListener(
-  "load",
-  () => {
-
-    const params = new URLSearchParams(
-      window.location.search
-    );
-
-    const city = params.get("city");
-
-    if (city) {
-      elements.cityInput.value = city;
-      searchWeather(city);
-      return;
-    }
-
-    if (
-      hasEnabledAutomaticLocation()
-    ) {
-      loadCurrentLocationWeather({
-        automatic: true,
-      });
-
-      return;
-    }
-
-    elements.cityInput?.focus();
-  },
-  {
-    once: true,
-  }
-);
 }
 
-/* ================= AUTOMATIC START LOCATION ================= */
+/* ================= INITIAL PAGE LOAD ================= */
 
 window.addEventListener(
   "load",
   () => {
-    if (
-      hasEnabledAutomaticLocation()
-    ) {
-      loadCurrentLocationWeather({
-        automatic: true,
-      });
+    const params =
+      new URLSearchParams(
+        window.location.search
+      );
 
+    const city =
+      params.get("city");
+
+    /*
+     * Favorites 페이지에서
+     * /?city=Daejeon 형태로 넘어오면
+     * 해당 도시의 날씨를 불러온다.
+     */
+    if (city) {
+      elements.cityInput.value =
+        city;
+
+      searchWeather(city);
       return;
     }
 
+    /*
+     * 도시 파라미터가 없을 때는
+     * 자동 위치 검색을 실행하지 않는다.
+     */
     elements.cityInput?.focus();
   },
   {
