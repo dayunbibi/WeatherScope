@@ -8,7 +8,7 @@ WeatherScope provides real-time weather forecasts, air quality information, inte
 
 ## Preview
 
-Add the main dashboard screenshot here.
+![WeatherScope dashboard showing current weather for Downtown Toronto](images/dashboard.jpg)
 
 ---
 
@@ -96,23 +96,23 @@ Add the main dashboard screenshot here.
 
 ### Dashboard
 
-Add dashboard screenshot here.
+![WeatherScope dashboard showing the current weather view](images/dashboard.jpg)
 
 ### Dark Mode
 
-Add dark mode screenshot here.
+![WeatherScope dashboard in dark mode](images/dark-mode.jpg)
 
 ### Air Quality
 
-Add air quality screenshot here.
+![WeatherScope air quality view with AQI index](images/air-quality.jpg)
 
 ### Maps
 
-Add map screenshot here.
+![WeatherScope interactive weather map view](images/maps.jpg)
 
 ### Favorites
 
-Add favorites screenshot here.
+![WeatherScope favorites page with saved cities](images/favorites.jpg)
 
 ---
 
