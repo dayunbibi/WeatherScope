@@ -6,3 +6,10 @@ node_modules/
 .DS_Store
 .vercel
 .env*
+
+# local AI tool config
+CLAUDE.md
+AGENTS.md
+.agents/
+.claude/
+skills-lock.json
